@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Katakana Learner</string>
+    <string name="katakana_learner">片仮名\nLearner</string>
+    <string name="pontuacao">Pontuação:</string>
+    <string name="simbolo">Símbolo:</string>
+    <string name="katakana_symbol">Katakana Symbol</string>
+    <string name="este_simbolo_corresponde_a_que_romanizacao">Este símbolo corresponde a que romanização?</string>
+    <string name="verificar">Verificar</string>
+    <string name="novo_simbolo">Novo Símbolo</string>
+    <string name="sair">Sair</string>
+    <string name="resposta_correta">Resposta Correta!</string>
+    <string name="resposta_incorreta">Resposta Incorreta!</string>
+    <string name="resposta_correta_msg">A romanização Hepburn deste símbolo é mesmo \"%1$s\".\nContinue Praticando!</string>
+    <string name="resposta_errada_msg">A romanização Hepburn correta para este símbolo é \"%1$s\", e você selecionou \"%2$s\".\nContinue praticando!</string>
+    <string name="proximo_simbolo_btnText">Próximo Símbolo</string>
+</resources>
