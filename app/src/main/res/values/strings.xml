@@ -1,3 +1,6 @@
 <resources>
 
+    <!-- Image content descriptions -->
+    <string name="dark_mode_icon">Dark mode switch icon</string>
+
 </resources>
