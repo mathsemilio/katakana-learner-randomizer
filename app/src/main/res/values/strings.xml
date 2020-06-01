@@ -3,4 +3,17 @@
     <!-- Image content descriptions -->
     <string name="dark_mode_icon">Dark mode switch icon</string>
 
+    <!-- Fragment Welcome Screen strings -->
+    <string name="get_ready_to_associate">Se prepare para associar…</string>
+    <string name="katakana_letters_and_romanizations">As letras do Katakana e suas Romanizações</string>
+    <string name="play">Jogar</string>
+
+    <!-- Fragment Main Game Screen strings -->
+    <string name="the_letter_this_time_is">A letra da vez é…</string>
+    <string name="katakana_letter_content_description">Símbolo do Katakana</string>
+    <string name="this_letter_corresponds_to_which_romaji">Esta letra corresponde a que Rômaji Hepburn?</string>
+    <string name="gameScore">Pontuação: %d</string>
+    <string name="verify_answer">Verificar Resposta</string>
+    <string name="exit">Sair</string>
+
 </resources>
