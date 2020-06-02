@@ -59,7 +59,7 @@
                 app:layout_constraintTop_toBottomOf="@id/image_katakana_letter_main_game_screen" />
 
             <RadioGroup
-                android:id="@+id/radio_group_hiragana_letters"
+                android:id="@+id/radio_group_katakana_letters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_24dp"
@@ -138,7 +138,7 @@
                 app:layout_constraintBottom_toTopOf="@id/button_verify_answer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radio_group_hiragana_letters"
+                app:layout_constraintTop_toBottomOf="@+id/radio_group_katakana_letters"
                 app:layout_constraintVertical_bias="1.0"
                 tools:text="Pontuação: 0" />
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="game_score_plurals">
+        <item quantity="one">Minha pontuação final no App Katakana Learner: %d ponto.</item>
+        <item quantity="other">Minha pontuação final no App Katakana Learner: %d pontos.</item>
+    </plurals>
+</resources>

@@ -46,8 +46,8 @@ class MainGameScreenViewModel : ViewModel() {
 
     val katakanaLettersList: MutableList<Katakana> = katakanaLetters.toMutableList()
 
-    var lastKatakanaLetterDrawableSymbolId: Int = 0
-    var lastKatakanaLetterLetterRomanization: String? = null
+    private var lastKatakanaLetterDrawableSymbolId: Int = 0
+    private var lastKatakanaLetterLetterRomanization: String? = null
 
     init {
         _gameScore.value = 0
@@ -68,23 +68,16 @@ class MainGameScreenViewModel : ViewModel() {
     }
 
     fun checkUserInput(selectedRomanization: String) {
-        when {
-            _currentKatakanaLetterRomanization.value == selectedRomanization -> {
-                _eventCorrectAnswer.value = true
+        if (_currentKatakanaLetterRomanization.value == selectedRomanization) {
+            _eventCorrectAnswer.value = true
 
-                getNextLetter()
-
-                updateGameScore()
-            }
-            _currentKatakanaLetterRomanization.value != selectedRomanization -> {
-                _eventCorrectAnswer.value = false
-
-                getNextLetter()
-            }
+            updateGameScore()
+        } else {
+            _eventCorrectAnswer.value = false
         }
     }
 
-    private fun getNextLetter() {
+    fun getNextLetter() {
         katakanaLettersList.removeAt(0)
 
         _katakanaLetterDrawableId.value = katakanaLettersList.first().drawableSymbolId
@@ -97,19 +90,16 @@ class MainGameScreenViewModel : ViewModel() {
         _katakanaLetterDrawableId.value = lastKatakanaLetterDrawableSymbolId
         _currentKatakanaLetterRomanization.value = lastKatakanaLetterLetterRomanization
 
-        when {
-            _currentKatakanaLetterRomanization.value == selectedRomanization -> {
-                _eventCorrectAnswer.value = true
+        if (_currentKatakanaLetterRomanization.value == selectedRomanization) {
+            _eventCorrectAnswer.value = true
 
-                updateGameScore()
+            updateGameScore()
 
-                _eventGameFinished.value = true
-            }
-            _currentKatakanaLetterRomanization.value != selectedRomanization -> {
-                _eventCorrectAnswer.value = false
+            _eventGameFinished.value = true
+        } else {
+            _eventCorrectAnswer.value = false
 
-                _eventGameFinished.value = true
-            }
+            _eventGameFinished.value = true
         }
     }
 

@@ -14,8 +14,26 @@
     <string name="the_letter_this_time_is">A letra da vez é…</string>
     <string name="katakana_letter_content_description">Símbolo do Katakana</string>
     <string name="this_letter_corresponds_to_which_romaji">Esta letra corresponde a que Rômaji Hepburn?</string>
-    <string name="gameScore">Pontuação: %d</string>
+    <string name="game_score">Pontuação: %d</string>
     <string name="verify_answer">Verificar Resposta</string>
     <string name="exit">Sair</string>
+
+    <!-- Fragment Score Screen strings -->
+    <string name="you_scored">Você pontuou</string>
+    <string name="finish_game">Terminar Jogo</string>
+    <string name="share">Compartilhar</string>
+
+    <!-- Alert Dialog Correct Answer strings -->
+    <string name="dialog_correct_answer_title">Resposta Correta!</string>
+    <string name="dialog_correct_answer_message">Muito bem! Continue Praticando!</string>
+    <string name="dialog_correct_answer_positive_button">Continuar</string>
+
+    <!-- Alert Dialog Incorrect Answer strings -->
+    <string name="dialog_incorrect_answer_title">Resposta Incorreta!</string>
+    <string name="dialog_incorrect_answer_message">O rõmaji correto para esta letra é \"%1$s"\. Continue Praticando!</string>
+    <string name="dialog_incorrect_answer_positive_button">Continuar</string>
+
+    <!-- Share intent chooser title string -->
+    <string name="share_intent_chooser_title">Compartilhe sua Pontuação!</string>
 
 </resources>
