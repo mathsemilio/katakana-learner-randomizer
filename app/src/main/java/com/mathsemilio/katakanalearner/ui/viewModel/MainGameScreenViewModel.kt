@@ -65,6 +65,8 @@ class MainGameScreenViewModel : ViewModel() {
 
         lastKatakanaLetterDrawableSymbolId = katakanaLettersList.last().drawableSymbolId
         lastKatakanaLetterLetterRomanization = katakanaLettersList.last().romanization
+
+        generateRadioButtonRomanizations()
     }
 
     fun checkUserInput(selectedRomanization: String) {
