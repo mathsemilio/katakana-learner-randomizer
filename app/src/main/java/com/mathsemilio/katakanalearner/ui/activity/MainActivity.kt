@@ -14,15 +14,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        image_dark_mode_switch.setOnClickListener { switchDarkMode(darkModeActivated) }
+        image_dark_mode_switch.setOnClickListener { switchDarkMode() }
     }
 
-    private fun switchDarkMode(activated: Boolean) {
-        darkModeActivated = if (activated) {
-            AppCompatDelegate.MODE_NIGHT_NO
+    private fun switchDarkMode() {
+        darkModeActivated = if (darkModeActivated) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             false
         } else {
-            AppCompatDelegate.MODE_NIGHT_YES
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             true
         }
     }

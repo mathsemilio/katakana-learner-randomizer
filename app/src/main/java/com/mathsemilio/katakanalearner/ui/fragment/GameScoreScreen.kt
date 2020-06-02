@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameScoreScreenBinding
-import com.mathsemilio.katakanalearner.util.GAME_SCORE
 
 class GameScoreScreen : Fragment() {
 
@@ -39,7 +38,7 @@ class GameScoreScreen : Fragment() {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(
-                GAME_SCORE,
+                Intent.EXTRA_TEXT,
                 resources.getQuantityString(R.plurals.game_score_plurals, gameScore, gameScore)
             )
             type = "text/plain"
