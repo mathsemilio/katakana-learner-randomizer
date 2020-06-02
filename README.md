@@ -5,7 +5,7 @@ A simple, yet effective, Katakana Syllabary randomization game for Android.
 This app aims to help learners of the Japanese language, quickly make visual associations with the Katakana letters
 and their associated Hepburn romanizations.
 
-<i>For more info on Hiragana, please refer to this page:</i>
+<i>For more info on Katakana, please refer to this page:</i>
 [Wikipedia - Katakana](https://en.wikipedia.org/wiki/Katakana)
 
 ### How it works?
