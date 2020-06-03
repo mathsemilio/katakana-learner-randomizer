@@ -25,7 +25,11 @@ class GameScoreScreen : Fragment() {
 
         binding.buttonFinishGame.setOnClickListener { navigateToWelcomeScreen() }
 
-        binding.textButtonShare.setOnClickListener { shareGameScore(gameScore) }
+        if (gameScore == 0) {
+            binding.textButtonShare.visibility = View.GONE
+        } else {
+            binding.textButtonShare.setOnClickListener { shareGameScore(gameScore) }
+        }
 
         return binding.root
     }
