@@ -120,7 +120,7 @@ class MainGameScreenViewModel : ViewModel() {
         val filteredKatakanaRomanizationList =
             katakanaRomanizationList.filterNot {
                 it == _currentKatakanaLetterRomanization.value
-            }.shuffled()
+            }
 
         val radioButton1RomanizationIndex = generateRandomNumber(null)
         val radioButton2RomanizationIndex = generateRandomNumber(radioButton1RomanizationIndex)
