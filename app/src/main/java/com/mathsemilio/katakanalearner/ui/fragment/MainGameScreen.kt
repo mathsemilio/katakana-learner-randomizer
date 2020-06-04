@@ -16,6 +16,8 @@ import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.MainGameScreenBinding
 import com.mathsemilio.katakanalearner.ui.viewModel.MainGameScreenViewModel
 
+private const val TAG_MAIN_GAME_SCREEN = "MainGameScreen"
+
 class MainGameScreen : Fragment() {
 
     private lateinit var viewModel: MainGameScreenViewModel

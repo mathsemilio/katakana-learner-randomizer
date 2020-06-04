@@ -10,6 +10,8 @@ import androidx.navigation.findNavController
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameScoreScreenBinding
 
+private const val TAG_SCORE_SCREEN = "GameScoreScreen"
+
 class GameScoreScreen : Fragment() {
 
     override fun onCreateView(
