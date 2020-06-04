@@ -16,7 +16,7 @@ he scores a point. Else, he is alerted about his answer, and a dialog shows the 
 <p>Once the user goes though all the letters, he will be directed to a score screen, where he can share his final game score
 and finish the game.</p>
 
-**NOTE:** This application shares the same code base from the 
+**NOTE:** <i>This application shares the same code base from </i>
 [Hiragana Learner Randomizer Game](https://github.com/mathsemilio/hiragana-learner-randomizer).
 
 ### Application Screenshots
