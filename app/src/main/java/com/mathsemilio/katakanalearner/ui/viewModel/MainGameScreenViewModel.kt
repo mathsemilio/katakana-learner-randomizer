@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.mathsemilio.katakanalearner.data.katakanaLetters
 import com.mathsemilio.katakanalearner.data.model.Katakana
 
+private const val TAG_MAIN_GAME_SCREEN_VM = "MainGameScreenViewModel"
+
 class MainGameScreenViewModel : ViewModel() {
 
     private val _katakanaLetterDrawableId = MutableLiveData<Int>()
@@ -148,7 +150,7 @@ class MainGameScreenViewModel : ViewModel() {
     }
 
     private fun generateRandomNumber(previousNumber: Int?): Int {
-        return (0 until 47).filterNot {
+        return (0 until 47).filter {
             it == previousNumber
         }.random()
     }
