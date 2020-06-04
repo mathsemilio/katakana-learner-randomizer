@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.32" />
+                app:layout_constraintGuide_percent="0.30" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_3"
@@ -71,6 +71,7 @@
                 android:id="@+id/image_katakana_letter_main_game_screen"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="@dimen/margin_8dp"
                 android:layout_marginBottom="@dimen/margin_8dp"
                 android:contentDescription="@string/katakana_letter_content_description"
                 app:layout_constraintBottom_toTopOf="@id/guideline_2"
