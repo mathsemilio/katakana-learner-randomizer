@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Katakana Learner</string>
+    <string name="get_ready_to_associate">Get ready to associate…</string>
+    <string name="katakana_letters_and_romanizations">The Katakana letters and their romanizations</string>
+    <string name="dark_mode_switch_text">Dark theme</string>
+    <string name="start">Start</string>
+    <string name="the_letter_this_time_is">The letter this time is…</string>
+    <string name="katakana_letter_content_description">Katakana Symbol</string>
+    <string name="this_letter_corresponds_to_which_romaji">This letter corresponds to which Hepburn Rõmaji?</string>
+    <string name="game_score">Score: %d</string>
+    <string name="verify_answer">Verify Answer</string>
+    <string name="exit">Exit</string>
+    <string name="you_scored">You Scored</string>
+    <string name="finish_game">Finish Game</string>
+    <string name="share">Share</string>
+    <string name="dialog_correct_answer_title">Correct Answer!</string>
+    <string name="dialog_correct_answer_message">Well Done! Keep practicing!</string>
+    <string name="dialog_correct_answer_positive_button">Continue</string>
+    <string name="dialog_incorrect_answer_title">Wrong Answer!</string>
+    <string name="dialog_incorrect_answer_message">The correct rõmaji for this letter is: \"%1$s\". Keep Practicing!</string>
+    <string name="dialog_incorrect_answer_positive_button">Continue</string>
+    <string name="share_intent_chooser_title">Share your game score!</string>
+</resources>
