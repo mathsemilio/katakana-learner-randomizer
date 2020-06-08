@@ -2,36 +2,36 @@
     <!-- App name -->
     <string name="app_name">Katakana Learner</string>
 
-    <!-- Fragment Welcome Screen strings -->
-    <string name="get_ready_to_associate">Se prepare para associar…</string>
-    <string name="katakana_letters_and_romanizations">As letras do Katakana com suas Romanizações</string>
-    <string name="dark_mode_switch_text">Tema Escuro</string>
-    <string name="start">Começar</string>
+    <!-- Game Welcome Screen -->
+    <string name="get_ready_to_associate">Get ready to associate…</string>
+    <string name="katakana_letters_and_romanizations">The Katakana letters and their romanizations</string>
+    <string name="dark_mode_switch_text">Dark theme</string>
+    <string name="start">Start</string>
 
-    <!-- Fragment Main Game Screen strings -->
-    <string name="the_letter_this_time_is">A letra da vez é…</string>
-    <string name="katakana_letter_content_description">Símbolo do Katakana</string>
-    <string name="this_letter_corresponds_to_which_romaji">Esta letra corresponde a que Rõmaji Hepburn?</string>
-    <string name="game_score">Pontuação: %d</string>
-    <string name="verify_answer">Verificar Resposta</string>
-    <string name="exit">Sair</string>
+    <!-- Main game screen strings -->
+    <string name="the_letter_this_time_is">The letter this time is…</string>
+    <string name="katakana_letter_content_description">Katakana letter</string>
+    <string name="this_letter_corresponds_to_which_romaji">This letter corresponds to which Hepburn Rõmaji?</string>
+    <string name="verify_answer">Verify Answer</string>
+    <string name="exit">Exit</string>
+    <string name="game_score">Score: %d</string>
 
-    <!-- Fragment Score Screen strings -->
-    <string name="you_scored">Você pontuou</string>
-    <string name="finish_game">Terminar Jogo</string>
-    <string name="share">Compartilhar</string>
+    <!-- Score screen strings -->
+    <string name="you_scored">You Scored</string>
+    <string name="finish_game">Finish Game</string>
+    <string name="share">Share</string>
 
-    <!-- Alert Dialog Correct Answer strings -->
-    <string name="dialog_correct_answer_title">Resposta Correta!</string>
-    <string name="dialog_correct_answer_message">Muito bem! Continue Praticando!</string>
-    <string name="dialog_correct_answer_positive_button">Continuar</string>
+    <!-- Alert Dialog Correct answer strings -->
+    <string name="alertDialogCorrectAnswer_title">Correct Answer!</string>
+    <string name="alertDialogCorrectAnswer_msg">Well Done! Keep practicing!</string>
+    <string name="alertDialogCorrectAnswer_positive_button_text">Continue</string>
 
-    <!-- Alert Dialog Incorrect Answer strings -->
-    <string name="dialog_incorrect_answer_title">Resposta Incorreta!</string>
-    <string name="dialog_incorrect_answer_message">O rõmaji correto para esta letra é \"%1$s"\. Continue Praticando!</string>
-    <string name="dialog_incorrect_answer_positive_button">Continuar</string>
+    <!-- Alert Dialog Incorrect answer strings -->
+    <string name="alertDialogWrongAnswer_title">Wrong Answer!</string>
+    <string name="alertDialogWrongAnswer_msg">The correct rõmaji for this letter is: \"%1$s\". Keep Practicing!</string>
+    <string name="alertDialogWrongAnswer_positive_button_text">Continue</string>
 
-    <!-- Share intent chooser title string -->
-    <string name="share_intent_chooser_title">Compartilhe sua Pontuação!</string>
+    <!-- Intent Create Chooser title -->
+    <string name="game_score_create_chooser_title">Share your game score!</string>
 
 </resources>

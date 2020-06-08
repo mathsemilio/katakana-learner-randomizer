@@ -105,9 +105,9 @@ class MainGameScreen : Fragment() {
             if (answerIsCorrect == true) {
                 // Building an AlertDialog to alert the user that his answer is correct
                 buildAlertDialog(
-                    R.string.dialog_correct_answer_title,
-                    getString(R.string.dialog_correct_answer_message),
-                    R.string.dialog_correct_answer_positive_button,
+                    R.string.alertDialogCorrectAnswer_title,
+                    getString(R.string.alertDialogCorrectAnswer_msg),
+                    R.string.alertDialogCorrectAnswer_positive_button_text,
                     DialogInterface.OnClickListener { _, _ ->
                         /*
                         Checking the eventGameFinished value, if it's true, the
@@ -125,12 +125,12 @@ class MainGameScreen : Fragment() {
             } else {
                 // Building an AlertDialog to alert the user that his answer is incorrect
                 buildAlertDialog(
-                    R.string.dialog_incorrect_answer_title,
+                    R.string.alertDialogWrongAnswer_title,
                     getString(
-                        R.string.dialog_incorrect_answer_message,
+                        R.string.alertDialogWrongAnswer_msg,
                         viewModel.currentKatakanaLetterRomanization.value
                     ),
-                    R.string.dialog_incorrect_answer_positive_button,
+                    R.string.alertDialogWrongAnswer_positive_button_text,
                     DialogInterface.OnClickListener { _, _ ->
                         if (viewModel.eventGameFinished.value == true) {
                             navigateToScoreScreen(viewModel.gameScore.value!!.toInt())

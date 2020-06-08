@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameWelcomeScreenBinding
-import com.mathsemilio.katakanalearner.util.DarkModeSelector
+import com.mathsemilio.katakanalearner.util.DarkModeUtil
 
 private const val TAG_WELCOME_SCREEN = "GameWelcomeScreen"
 
@@ -36,16 +36,16 @@ class GameWelcomeScreen : Fragment() {
         Setting the state of the darkModeSwitch switch according to value returned by the
         checkDarkModeSystemStatus function
         */
-        binding.darkModeSwitch.isChecked = DarkModeSelector.checkDarkModeSystemStatus()
+        binding.darkModeSwitch.isChecked = DarkModeUtil.checkDarkModeSystemStatus()
 
         // Listener for the darkModeSwitch switch to activate or deactivate the dark mode theme
         binding.darkModeSwitch.setOnCheckedChangeListener { buttonView, _ ->
             if (buttonView.isChecked) {
                 Log.i(TAG_WELCOME_SCREEN, "onCreateView: Dark mode on")
-                DarkModeSelector.switchDarkModeState()
+                DarkModeUtil.switchDarkModeState()
             } else {
                 Log.i(TAG_WELCOME_SCREEN, "onCreateView: Dark mode off")
-                DarkModeSelector.switchDarkModeState()
+                DarkModeUtil.switchDarkModeState()
             }
         }
 
