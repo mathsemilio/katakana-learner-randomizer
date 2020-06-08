@@ -33,6 +33,14 @@ class GameScoreScreen : Fragment() {
             Log.d(TAG_SCORE_SCREEN, "onCreateView: Game score value retrieved: $it")
         }
 
+        /*
+        Checking if the game score is equal to 46 (a perfect score), if it is, a different
+        string for the textBodyYouScored TextView will be shown
+        */
+        if (gameScore == 46) {
+            binding.textBodyYouScored.text = getString(R.string.perfect_score)
+        }
+
         binding.textHeadlineScoreNumber.text = gameScore.toString()
 
         binding.buttonFinishGame.setOnClickListener { navigateToWelcomeScreen() }
@@ -83,7 +91,7 @@ class GameScoreScreen : Fragment() {
         }
 
         val shareIntent =
-            Intent.createChooser(sendIntent, getString(R.string.share_intent_chooser_title))
+            Intent.createChooser(sendIntent, getString(R.string.game_score_create_chooser_title))
 
         Log.i(TAG_SCORE_SCREEN, "shareGameScore: Starting the intent activity")
         startActivity(shareIntent)
