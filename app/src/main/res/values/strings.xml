@@ -3,9 +3,9 @@
     <string name="app_name">Katakana Learner</string>
 
     <!-- Game Welcome Screen -->
+    <string name="dark_theme_switch_icon">Light/Dark theme switch icon</string>
     <string name="get_ready_to_associate">Get ready to associate…</string>
     <string name="katakana_letters_and_romanizations">The Katakana letters and their romanizations</string>
-    <string name="dark_mode_switch_text">Dark theme</string>
     <string name="start">Start</string>
 
     <!-- Main game screen strings -->

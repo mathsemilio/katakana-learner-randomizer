@@ -3,7 +3,6 @@
     <string name="app_name">Katakana Learner</string>
     <string name="get_ready_to_associate">Se prepare para associar…</string>
     <string name="katakana_letters_and_romanizations">As letras do Katakana com suas Romanizações</string>
-    <string name="dark_mode_switch_text">Tema escuro</string>
     <string name="start">Começar</string>
     <string name="the_letter_this_time_is">A letra da vez é…</string>
     <string name="katakana_letter_content_description">Letra do Katakana</string>
@@ -22,4 +21,5 @@
     <string name="alertDialogWrongAnswer_msg">O rõmaji correto para esta letra é \"%1$s"\. Continue Praticando!</string>
     <string name="alertDialogWrongAnswer_positive_button_text">Continuar</string>
     <string name="game_score_create_chooser_title">Compartilhe sua pontuação!</string>
+    <string name="dark_theme_switch_icon">Ícone interruptor do tema claro/escuro</string>
 </resources>

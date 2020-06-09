@@ -1,7 +1,6 @@
 package com.mathsemilio.katakanalearner.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,6 @@ import androidx.navigation.findNavController
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameWelcomeScreenBinding
 import com.mathsemilio.katakanalearner.util.DarkModeUtil
-
-private const val TAG_WELCOME_SCREEN = "GameWelcomeScreen"
 
 /**
  * Fragment class for the game's welcome screen.
@@ -29,25 +26,11 @@ class GameWelcomeScreen : Fragment() {
         val binding: GameWelcomeScreenBinding =
             GameWelcomeScreenBinding.inflate(inflater, container, false)
 
-        // Listener for the buttonStart button
+        // Listener for the buttonStart Button
         binding.buttonStart.setOnClickListener { navigateToMainScreen() }
 
-        /*
-        Setting the state of the darkModeSwitch switch according to value returned by the
-        checkDarkModeSystemStatus function
-        */
-        binding.darkModeSwitch.isChecked = DarkModeUtil.checkDarkModeSystemStatus()
-
-        // Listener for the darkModeSwitch switch to activate or deactivate the dark mode theme
-        binding.darkModeSwitch.setOnCheckedChangeListener { buttonView, _ ->
-            if (buttonView.isChecked) {
-                Log.i(TAG_WELCOME_SCREEN, "onCreateView: Dark mode on")
-                DarkModeUtil.switchDarkModeState()
-            } else {
-                Log.i(TAG_WELCOME_SCREEN, "onCreateView: Dark mode off")
-                DarkModeUtil.switchDarkModeState()
-            }
-        }
+        // Listener for the darkModeSwitchIcon ImageView
+        binding.darkModeSwitchIcon.setOnClickListener { DarkModeUtil.switchDarkModeState() }
 
         // Returning the root of the inflated layout
         return binding.root
