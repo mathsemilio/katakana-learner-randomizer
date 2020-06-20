@@ -9,7 +9,7 @@ and their associated Hepburn romanizations.
 [Wikipedia - Katakana](https://en.wikipedia.org/wiki/Katakana)
 
 ### How it works?
-Once the user starts the game, the app's algorithm generates a random order of the 47 most common Katakana letters. And presents 
+Once the user starts the game, the app's algorithm generates a random order of the 48 most common Katakana letters. And presents 
 the user with a random letter and four options of romanizations. The user simply has to select the romanization that matches 
 the current letter on the screen. Once the user selects a romanization, he clicks on a button to verify his answer. If his answer is correct,
 he scores a point. Else, he is alerted about his answer, and a dialog shows the correct romanization for that letter.

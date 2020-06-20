@@ -12,7 +12,7 @@ import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameScoreScreenBinding
 
 private const val TAG_SCORE_SCREEN = "GameScoreScreen"
-private const val PERFECT_SCORE = 46
+private const val PERFECT_SCORE = 48
 
 /**
  * Fragment class for the game score screen
@@ -35,7 +35,7 @@ class GameScoreScreen : Fragment() {
         }
 
         /*
-        Checking if the game score is equal to 46 (a perfect score), if it is, a different
+        Checking if the game score is equal to 48 (a perfect score), if it is, a different
         string for the textBodyYouScored TextView will be shown
         */
         if (gameScore == PERFECT_SCORE) {
