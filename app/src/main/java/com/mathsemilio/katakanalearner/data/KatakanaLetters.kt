@@ -1,201 +1,64 @@
 package com.mathsemilio.katakanalearner.data
 
-import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.data.model.Katakana
 
 val katakanaLetters: List<Katakana> = listOf(
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col1_a,
-        romanization = "A"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col1_i,
-        romanization = "I"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col1_u,
-        romanization = "U"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col1_e,
-        romanization = "E"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col1_o,
-        romanization = "O"
-    ),
+    Katakana(letter = "ア", romanization = "A"),
+    Katakana(letter = "イ", romanization = "I"),
+    Katakana(letter = "ウ", romanization = "U"),
+    Katakana(letter = "エ", romanization = "E"),
+    Katakana(letter = "オ", romanization = "O"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col2_ka,
-        romanization = "KA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col2_ki,
-        romanization = "KI"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col2_ku,
-        romanization = "KU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col2_ke,
-        romanization = "KE"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col2_ko,
-        romanization = "KO"
-    ),
+    Katakana(letter = "カ", romanization = "KA"),
+    Katakana(letter = "キ", romanization = "KI"),
+    Katakana(letter = "ク", romanization = "KU"),
+    Katakana(letter = "ケ", romanization = "KE"),
+    Katakana(letter = "コ", romanization = "KO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col3_sa,
-        romanization = "SA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col3_shi,
-        romanization = "SHI"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col3_su,
-        romanization = "SU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col3_se,
-        romanization = "SE"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col3_so,
-        romanization = "SO"
-    ),
+    Katakana(letter = "サ", romanization = "SA"),
+    Katakana(letter = "シ", romanization = "SHI"),
+    Katakana(letter = "ス", romanization = "SU"),
+    Katakana(letter = "セ", romanization = "SE"),
+    Katakana(letter = "ソ", romanization = "SO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col4_ta,
-        romanization = "TA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col4_chi,
-        romanization = "CHI"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col4_tsu,
-        romanization = "TSU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col4_tse,
-        romanization = "TSE"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col4_to,
-        romanization = "TO"
-    ),
+    Katakana(letter = "タ", romanization = "TA"),
+    Katakana(letter = "チ", romanization = "CHI"),
+    Katakana(letter = "ツ", romanization = "TSU"),
+    Katakana(letter = "テ", romanization = "TSE"),
+    Katakana(letter = "ト", romanization = "TO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col5_na,
-        romanization = "NA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col5_ni,
-        romanization = "NI"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col5_nu,
-        romanization = "NU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col5_ne,
-        romanization = "NE"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col5_no,
-        romanization = "NO"
-    ),
+    Katakana(letter = "ナ", romanization = "NA"),
+    Katakana(letter = "ニ", romanization = "NI"),
+    Katakana(letter = "ヌ", romanization = "NU"),
+    Katakana(letter = "ネ", romanization = "NE"),
+    Katakana(letter = "ノ", romanization = "NO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col6_ha,
-        romanization = "HA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col6_hi,
-        romanization = "HI"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col6_fu,
-        romanization = "FU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col6_he,
-        romanization = "HE"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col6_ho,
-        romanization = "HO"
-    ),
+    Katakana(letter = "ハ", romanization = "HA"),
+    Katakana(letter = "ヒ", romanization = "HI"),
+    Katakana(letter = "フ", romanization = "FU"),
+    Katakana(letter = "ヘ", romanization = "HE"),
+    Katakana(letter = "ホ", romanization = "HO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col7_ma,
-        romanization = "MA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col7_mi,
-        romanization = "MI"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col7_mu,
-        romanization = "MU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col7_me,
-        romanization = "ME"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col7_mo,
-        romanization = "MO"
-    ),
+    Katakana(letter = "マ", romanization = "MA"),
+    Katakana(letter = "ミ", romanization = "MI"),
+    Katakana(letter = "ム", romanization = "MU"),
+    Katakana(letter = "メ", romanization = "ME"),
+    Katakana(letter = "モ", romanization = "MO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col8_ya,
-        romanization = "YA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col8_yu,
-        romanization = "YU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col8_yo,
-        romanization = "YO"
-    ),
+    Katakana(letter = "ヤ", romanization = "YA"),
+    Katakana(letter = "ユ", romanization = "YU"),
+    Katakana(letter = "ヨ", romanization = "YO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col9_ra,
-        romanization = "RA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col9_ri,
-        romanization = "RI"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col9_ru,
-        romanization = "RU"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col9_re,
-        romanization = "RE"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col9_ro,
-        romanization = "RO"
-    ),
+    Katakana(letter = "ラ", romanization = "RA"),
+    Katakana(letter = "リ", romanization = "RI"),
+    Katakana(letter = "ル", romanization = "RU"),
+    Katakana(letter = "レ", romanization = "RE"),
+    Katakana(letter = "ロ", romanization = "RO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col10_wa,
-        romanization = "WA"
-    ),
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col10_wo,
-        romanization = "WO"
-    ),
+    Katakana(letter = "ワ", romanization = "WA"),
+    Katakana(letter = "ヰ", romanization = "WI"),
+    Katakana(letter = "ヱ", romanization = "WE"),
+    Katakana(letter = "ヲ", romanization = "WO"),
 
-    Katakana(
-        drawableSymbolId = R.drawable.ic_col11_n,
-        romanization = "N"
-    )
+    Katakana(letter = "ン", romanization = "N")
 )

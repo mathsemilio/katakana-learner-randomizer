@@ -1,6 +1,6 @@
 package com.mathsemilio.katakanalearner.data.model
 
 data class Katakana(
-    val drawableSymbolId: Int,
+    val letter: String,
     val romanization: String
 )

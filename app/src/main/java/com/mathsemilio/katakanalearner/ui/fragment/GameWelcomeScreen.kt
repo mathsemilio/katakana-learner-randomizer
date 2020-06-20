@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameWelcomeScreenBinding
 import com.mathsemilio.katakanalearner.util.DarkModeUtil
@@ -27,23 +27,14 @@ class GameWelcomeScreen : Fragment() {
             GameWelcomeScreenBinding.inflate(inflater, container, false)
 
         // Listener for the buttonStart Button
-        binding.buttonStart.setOnClickListener { navigateToMainScreen() }
+        binding.buttonStart.setOnClickListener {
+            this.findNavController().navigate(R.id.action_gameWelcomeScreen_to_mainGameScreen)
+        }
 
         // Listener for the darkModeSwitchIcon ImageView
         binding.darkModeSwitchIcon.setOnClickListener { DarkModeUtil.switchDarkModeState() }
 
         // Returning the root of the inflated layout
         return binding.root
-    }
-
-    //==========================================================================================
-    // navigateToMainScreen function
-    //==========================================================================================
-    /**
-     * Function for navigating from the current screen to the main game screen.
-     */
-    private fun navigateToMainScreen() {
-        activity?.findNavController(R.id.nav_host_fragment)
-            ?.navigate(R.id.action_gameWelcomeScreen_to_mainGameScreen)
     }
 }

@@ -17,9 +17,9 @@ class MainGameScreenViewModel : ViewModel() {
     //==========================================================================================
     // MutableLiveData variables for the UI elements
     //==========================================================================================
-    private val _currentKatakanaLetterDrawableId = MutableLiveData<Int>()
-    val currentKatakanaLetterDrawableId: LiveData<Int>
-        get() = _currentKatakanaLetterDrawableId
+    private val _currentKatakanaLetterString = MutableLiveData<String>()
+    val currentKatakanaLetterString: LiveData<String>
+        get() = _currentKatakanaLetterString
 
     private val _currentKatakanaLetterRomanization = MutableLiveData<String>()
     val currentKatakanaLetterRomanization: LiveData<String>
@@ -61,7 +61,7 @@ class MainGameScreenViewModel : ViewModel() {
     //==========================================================================================
     val katakanaLettersList: MutableList<Katakana> = katakanaLetters.toMutableList()
 
-    private var lastKatakanaLetterDrawableSymbolId: Int = 0
+    private var lastKatakanaLetterString: String? = null
     private var lastKatakanaLetterLetterRomanization: String? = null
 
     //==========================================================================================
@@ -88,13 +88,13 @@ class MainGameScreenViewModel : ViewModel() {
         katakanaLettersList.shuffle()
 
         // Getting the first drawableSymbolId and romanization from the list
-        _currentKatakanaLetterDrawableId.value = katakanaLettersList.first().drawableSymbolId
+        _currentKatakanaLetterString.value = katakanaLettersList.first().letter
         _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization.also {
             Log.d(TAG_MAIN_GAME_SCREEN_VM, "startGame: First letter: $it")
         }
 
         // Getting the last drawableSymbolId and romanization from the list
-        lastKatakanaLetterDrawableSymbolId = katakanaLettersList.last().drawableSymbolId
+        lastKatakanaLetterString = katakanaLettersList.last().letter
         lastKatakanaLetterLetterRomanization = katakanaLettersList.last().romanization.also {
             Log.d(TAG_MAIN_GAME_SCREEN_VM, "startGame: Last letter: $it")
         }
@@ -138,7 +138,7 @@ class MainGameScreenViewModel : ViewModel() {
         katakanaLettersList.removeAt(0)
 
         // Getting the first letter from the katakanaLettersList list
-        _currentKatakanaLetterDrawableId.value = katakanaLettersList.first().drawableSymbolId
+        _currentKatakanaLetterString.value = katakanaLettersList.first().letter
         _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization.also {
             Log.d(TAG_MAIN_GAME_SCREEN_VM, "getNextLetter: Next letter: $it")
         }
@@ -159,7 +159,7 @@ class MainGameScreenViewModel : ViewModel() {
          Setting the value of the current katakana letter as the value of the last letter
          from the list
         */
-        _currentKatakanaLetterDrawableId.value = lastKatakanaLetterDrawableSymbolId
+        _currentKatakanaLetterString.value = lastKatakanaLetterString
         _currentKatakanaLetterRomanization.value = lastKatakanaLetterLetterRomanization
 
         if (_currentKatakanaLetterRomanization.value == selectedRomanization) {

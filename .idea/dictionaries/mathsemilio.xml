@@ -1,14 +1,12 @@
 <component name="ProjectDictionaryState">
-  <dictionary name="mathsemilio">
-    <words>
-      <w>gerar</w>
-      <w>katakana</w>
-      <w>mathsemilio</w>
-      <w>romanization</w>
-      <w>romanizations</w>
-      <w>rõmaji</w>
-      <w>simbolo</w>
-      <w>verificar</w>
-    </words>
-  </dictionary>
+    <dictionary name="mathsemilio">
+        <words>
+            <w>katakana</w>
+            <w>mathsemilio</w>
+            <w>romaji</w>
+            <w>romanization</w>
+            <w>romanizations</w>
+            <w>rōmaji</w>
+        </words>
+    </dictionary>
 </component>

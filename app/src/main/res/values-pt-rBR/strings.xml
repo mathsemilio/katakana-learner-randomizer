@@ -5,8 +5,7 @@
     <string name="katakana_letters_and_romanizations">As letras do Katakana com suas Romanizações</string>
     <string name="start">Começar</string>
     <string name="the_letter_this_time_is">A letra da vez é…</string>
-    <string name="katakana_letter_content_description">Letra do Katakana</string>
-    <string name="this_letter_corresponds_to_which_romaji">Esta letra corresponde a que Rõmaji Hepburn?</string>
+    <string name="this_letter_corresponds_to_which_romaji">… e ela corresponde a que Rōmaji Hepburn?</string>
     <string name="verify_answer">Verificar Resposta</string>
     <string name="exit">Sair</string>
     <string name="game_score">Pontuação: %d</string>

@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameScoreScreenBinding
 
 private const val TAG_SCORE_SCREEN = "GameScoreScreen"
+private const val PERFECT_SCORE = 46
 
 /**
  * Fragment class for the game score screen
@@ -37,13 +38,15 @@ class GameScoreScreen : Fragment() {
         Checking if the game score is equal to 46 (a perfect score), if it is, a different
         string for the textBodyYouScored TextView will be shown
         */
-        if (gameScore == 46) {
+        if (gameScore == PERFECT_SCORE) {
             binding.textBodyYouScored.text = getString(R.string.perfect_score)
         }
 
         binding.textHeadlineScoreNumber.text = gameScore.toString()
 
-        binding.buttonFinishGame.setOnClickListener { navigateToWelcomeScreen() }
+        binding.buttonFinishGame.setOnClickListener {
+            this.findNavController().navigate(R.id.action_gameScoreScreen_to_gameWelcomeScreen)
+        }
 
         /*
         Checking if the game score equals 0, if it is, the Share button will be hidden, else,
@@ -54,7 +57,7 @@ class GameScoreScreen : Fragment() {
                 TAG_SCORE_SCREEN,
                 "onCreateView: Game score value equals 0, hiding the share button"
             )
-            binding.textButtonShare.visibility = View.GONE
+            binding.textButtonShare.visibility = View.INVISIBLE
         } else {
             Log.d(TAG_SCORE_SCREEN, "onCreateView: Game score value > 0, showing the share button")
             binding.textButtonShare.setOnClickListener { shareGameScore(gameScore) }
@@ -95,16 +98,5 @@ class GameScoreScreen : Fragment() {
 
         Log.i(TAG_SCORE_SCREEN, "shareGameScore: Starting the intent activity")
         startActivity(shareIntent)
-    }
-
-    //==========================================================================================
-    // navigateToWelcomeScreen function
-    //==========================================================================================
-    /**
-     * Function to navigate from the current screen to the welcome screen.
-     */
-    private fun navigateToWelcomeScreen() {
-        activity?.findNavController(R.id.nav_host_fragment)
-            ?.navigate(R.id.action_gameScoreScreen_to_gameWelcomeScreen)
     }
 }
