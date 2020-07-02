@@ -107,8 +107,8 @@ class MainGameScreen : Fragment() {
                         if (viewModel.eventGameFinished.value == true) {
                             navigateToScoreScreen(viewModel.gameScore.value!!.toInt())
                         } else {
-                            binding.radioGroupKatakanaLetters.clearCheck()
                             viewModel.getNextLetter()
+                            binding.radioGroupKatakanaLetters.clearCheck()
                         }
                     }
                 )
@@ -125,8 +125,8 @@ class MainGameScreen : Fragment() {
                         if (viewModel.eventGameFinished.value == true) {
                             navigateToScoreScreen(viewModel.gameScore.value!!.toInt())
                         } else {
-                            binding.radioGroupKatakanaLetters.clearCheck()
                             viewModel.getNextLetter()
+                            binding.radioGroupKatakanaLetters.clearCheck()
                         }
                     }
                 )
@@ -144,7 +144,7 @@ class MainGameScreen : Fragment() {
      * Function to navigate from the current screen to the welcome screen.
      */
     private fun navigateToWelcomeScreen() {
-        this.findNavController().navigate(R.id.action_mainGameScreen_to_gameWelcomeScreen)
+        findNavController().navigate(R.id.action_mainGameScreen_to_gameWelcomeScreen)
     }
 
     //==========================================================================================
@@ -157,8 +157,8 @@ class MainGameScreen : Fragment() {
      * @param gameScore - Integer for the game score to be passed to the score fragment
      */
     private fun navigateToScoreScreen(gameScore: Int) {
-        val action = MainGameScreenDirections.actionMainGameScreenToGameScoreScreen(gameScore)
-        this.findNavController().navigate(action)
+        findNavController()
+            .navigate(MainGameScreenDirections.actionMainGameScreenToGameScoreScreen(gameScore))
     }
 
     //==========================================================================================

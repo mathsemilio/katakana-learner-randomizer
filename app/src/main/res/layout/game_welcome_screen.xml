@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/dark_mode_switch_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginTop="@dimen/margin_16dp"
         android:layout_marginEnd="@dimen/margin_16dp"
         android:backgroundTint="?attr/colorControlNormal"

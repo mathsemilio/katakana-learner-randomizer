@@ -1,13 +1,10 @@
 package com.mathsemilio.katakanalearner.ui.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mathsemilio.katakanalearner.data.katakanaLetters
 import com.mathsemilio.katakanalearner.data.model.Katakana
-
-private const val TAG_MAIN_GAME_SCREEN_VM = "MainGameScreenViewModel"
 
 /**
  * ViewModel class that implements most of the game's logic
@@ -82,22 +79,16 @@ class MainGameScreenViewModel : ViewModel() {
      * Function that is responsible for key tasks necessary for starting the game.
      */
     private fun startGame() {
-        Log.i(TAG_MAIN_GAME_SCREEN_VM, "startGame: Game Started")
-
         // Shuffling the katakanaLettersList list
         katakanaLettersList.shuffle()
 
         // Getting the first drawableSymbolId and romanization from the list
         _currentKatakanaLetterString.value = katakanaLettersList.first().letter
-        _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization.also {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "startGame: First letter: $it")
-        }
+        _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization
 
         // Getting the last drawableSymbolId and romanization from the list
         lastKatakanaLetterString = katakanaLettersList.last().letter
-        lastKatakanaLetterLetterRomanization = katakanaLettersList.last().romanization.also {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "startGame: Last letter: $it")
-        }
+        lastKatakanaLetterLetterRomanization = katakanaLettersList.last().romanization
 
         generateRadioButtonRomanization()
     }
@@ -116,12 +107,10 @@ class MainGameScreenViewModel : ViewModel() {
         answer is correct and the game score is updated, else it's incorrect
         */
         if (_currentKatakanaLetterRomanization.value == selectedRomanization) {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "checkUserInput: Answer correct")
             _eventCorrectAnswer.value = true
 
             updateGameScore()
         } else {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "checkUserInput: Incorrect answer")
             _eventCorrectAnswer.value = false
         }
     }
@@ -139,9 +128,7 @@ class MainGameScreenViewModel : ViewModel() {
 
         // Getting the first letter from the katakanaLettersList list
         _currentKatakanaLetterString.value = katakanaLettersList.first().letter
-        _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization.also {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "getNextLetter: Next letter: $it")
-        }
+        _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization
 
         generateRadioButtonRomanization()
     }
@@ -154,7 +141,6 @@ class MainGameScreenViewModel : ViewModel() {
      * to the UI. It also checks the user input and finishes the game.
      */
     fun getLastLetter(selectedRomanization: String) {
-        Log.d(TAG_MAIN_GAME_SCREEN_VM, "getLastLetter: Setting last letter")
         /*
          Setting the value of the current katakana letter as the value of the last letter
          from the list
@@ -163,7 +149,6 @@ class MainGameScreenViewModel : ViewModel() {
         _currentKatakanaLetterRomanization.value = lastKatakanaLetterLetterRomanization
 
         if (_currentKatakanaLetterRomanization.value == selectedRomanization) {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "getLastLetter: Correct answer, game finished")
             _eventCorrectAnswer.value = true
 
             updateGameScore()
@@ -171,7 +156,6 @@ class MainGameScreenViewModel : ViewModel() {
             // Setting the value of _eventGameFinished as TRUE to finish the game
             _eventGameFinished.value = true
         } else {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "getLastLetter: Incorrect answer, game finished")
             _eventCorrectAnswer.value = false
 
             // Setting the value of _eventGameFinished as TRUE to finish the game
@@ -186,10 +170,7 @@ class MainGameScreenViewModel : ViewModel() {
      * Function that increments the game score by 1
      */
     private fun updateGameScore() {
-        Log.d(TAG_MAIN_GAME_SCREEN_VM, "updateGameScore: Incrementing game score")
-        _gameScore.value = (_gameScore.value)?.inc().also {
-            Log.d(TAG_MAIN_GAME_SCREEN_VM, "updateGameScore: New value: $it")
-        }
+        _gameScore.value = (_gameScore.value)?.inc()
     }
 
     //==========================================================================================
@@ -217,67 +198,23 @@ class MainGameScreenViewModel : ViewModel() {
                 .shuffled()
 
         // Getting a random romanization for each radio button from the filteredList
-        _radioButton1Romanization.value = filteredList.slice(0..13).random().also {
-            Log.d(
-                TAG_MAIN_GAME_SCREEN_VM,
-                "generateRadioButtonRomanization: Random romanization for Radio Button 1: $it"
-            )
-        }
+        _radioButton1Romanization.value = filteredList.slice(0..13).random()
 
-        _radioButton2Romanization.value = filteredList.slice(14..27).random().also {
-            Log.d(
-                TAG_MAIN_GAME_SCREEN_VM,
-                "generateRadioButtonRomanization: Random romanization for Radio Button 2: $it"
-            )
-        }
+        _radioButton2Romanization.value = filteredList.slice(14..27).random()
 
-        _radioButton3Romanization.value = filteredList.slice(28..42).random().also {
-            Log.d(
-                TAG_MAIN_GAME_SCREEN_VM,
-                "generateRadioButtonRomanization: Random romanization for Radio Button 3: $it"
-            )
-        }
+        _radioButton3Romanization.value = filteredList.slice(28..42).random()
 
-        _radioButton4Romanization.value = filteredList.slice(43..46).random().also {
-            Log.d(
-                TAG_MAIN_GAME_SCREEN_VM,
-                "generateRadioButtonRomanization: Random romanization for Radio Button 4: $it"
-            )
-        }
+        _radioButton4Romanization.value = filteredList.slice(43..46).random()
 
         /*
         Generating a random number between 0 and 4, and based on that number, a radio button
         will be selected to contain the current romanization for the letter on the screen.
         */
         when ((0 until 4).random()) {
-            0 -> _radioButton1Romanization.value = _currentKatakanaLetterRomanization.value.also {
-                Log.d(
-                    TAG_MAIN_GAME_SCREEN_VM,
-                    "generateRadioButtonRomanization: Radio Button 1 selected to contain the " +
-                            "correct answer"
-                )
-            }
-            1 -> _radioButton2Romanization.value = _currentKatakanaLetterRomanization.value.also {
-                Log.d(
-                    TAG_MAIN_GAME_SCREEN_VM,
-                    "generateRadioButtonRomanization: Radio Button 2 selected to contain the " +
-                            "correct answer"
-                )
-            }
-            2 -> _radioButton3Romanization.value = _currentKatakanaLetterRomanization.value.also {
-                Log.d(
-                    TAG_MAIN_GAME_SCREEN_VM,
-                    "generateRadioButtonRomanization: Radio Button 3 selected to contain the " +
-                            "correct answer"
-                )
-            }
-            3 -> _radioButton4Romanization.value = _currentKatakanaLetterRomanization.value.also {
-                Log.d(
-                    TAG_MAIN_GAME_SCREEN_VM,
-                    "generateRadioButtonRomanization: Radio Button 4 selected to contain the " +
-                            "correct answer"
-                )
-            }
+            0 -> _radioButton1Romanization.value = _currentKatakanaLetterRomanization.value
+            1 -> _radioButton2Romanization.value = _currentKatakanaLetterRomanization.value
+            2 -> _radioButton3Romanization.value = _currentKatakanaLetterRomanization.value
+            3 -> _radioButton4Romanization.value = _currentKatakanaLetterRomanization.value
         }
     }
 }
