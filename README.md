@@ -15,9 +15,8 @@ Before the game starts, the user selects a difficulty for the game (which can al
 [Hiragana Learner Randomizer Game](https://github.com/mathsemilio/hiragana-learner-randomizer).
 
 ### Application Screenshots
-<b>**To be updated!**</b>
 To checkout screenshots, please visit this gallery:
-<p><a href="https://postimg.cc/gallery/kBJdB1c">Katakana Learner Randomizer Gallery</a></p>
+<p><a href="https://postimg.cc/gallery/Dv3Mv6b">Katakana Learner Randomizer Gallery</a></p>
 
 ### Development Technologies
 Programming Language - **Kotlin**
