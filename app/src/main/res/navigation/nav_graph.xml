@@ -15,8 +15,16 @@
             app:destination="@id/mainGameScreen"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/action_gameWelcomeScreen_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
 
     </fragment>
 
@@ -26,22 +34,27 @@
         tools:layout="@layout/main_game_screen">
 
         <action
+            android:id="@+id/action_mainGameScreen_to_gameScoreScreen"
+            app:destination="@id/gameScoreScreen"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+
+        <action
             android:id="@+id/action_mainGameScreen_to_gameWelcomeScreen"
             app:destination="@id/gameWelcomeScreen"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:launchSingleTop="true"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/gameWelcomeScreen" />
 
-        <action
-            android:id="@+id/action_mainGameScreen_to_gameScoreScreen"
-            app:destination="@id/gameScoreScreen"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="game_difficulty_value"
+            android:defaultValue="0"
+            app:argType="integer" />
 
     </fragment>
 
@@ -56,15 +69,48 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:launchSingleTop="true"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/gameWelcomeScreen"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_gameScoreScreen_to_mainGameScreen"
+            app:destination="@id/mainGameScreen"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
             app:popUpToInclusive="true" />
 
         <argument
             android:name="game_score"
             android:defaultValue="0"
             app:argType="integer" />
+
+        <argument
+            android:name="game_difficulty"
+            android:defaultValue="0"
+            app:argType="integer" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.mathsemilio.katakanalearner.ui.fragment.SettingsFragment"
+        android:label="@string/settings_toolbar_title">
+
+        <action
+            android:id="@+id/action_settingsFragment_to_gameWelcomeScreen"
+            app:destination="@id/gameWelcomeScreen"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/gameWelcomeScreen"
+            app:popUpToInclusive="true" />
 
     </fragment>
 

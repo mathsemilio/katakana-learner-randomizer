@@ -1,46 +1,72 @@
 package com.mathsemilio.katakanalearner.ui.viewModel
 
+import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.mathsemilio.katakanalearner.data.katakanaLetters
-import com.mathsemilio.katakanalearner.data.model.Katakana
+import com.mathsemilio.katakanalearner.data.katakanaSymbolsList
+import com.mathsemilio.katakanalearner.data.model.KatakanaSymbol
+import com.mathsemilio.katakanalearner.others.GAME_DIFFICULTY_VALUE_BEGINNER
+import com.mathsemilio.katakanalearner.others.GAME_DIFFICULTY_VALUE_MEDIUM
+import kotlin.random.Random
 
 /**
- * ViewModel class that implements most of the game's logic
+ * ViewModel class that implements most of the games and UI logic.
  */
-class MainGameScreenViewModel : ViewModel() {
+class MainGameViewModel(gameDifficultyValue: Int) : ViewModel() {
+
+    companion object {
+        const val ONE_SECOND = 1000L
+        const val COUNTDOWN_TIME_BEGINNER = 15000L
+        const val COUNTDOWN_TIME_MEDIUM = 10000L
+        const val COUNTDOWN_TIME_HARD = 5000L
+
+        const val PROGRESS_BAR_MAX_BEGINNER = 14
+        const val PROGRESS_BAR_MAX_MEDIUM = 9
+        const val PROGRESS_BAR_MAX_HARD = 4
+    }
 
     //==========================================================================================
     // MutableLiveData variables for the UI elements
     //==========================================================================================
-    private val _currentKatakanaLetterString = MutableLiveData<String>()
+    private val _currentKatakanaSymbolString = MutableLiveData<String>()
     val currentKatakanaLetterString: LiveData<String>
-        get() = _currentKatakanaLetterString
+        get() = _currentKatakanaSymbolString
 
-    private val _currentKatakanaLetterRomanization = MutableLiveData<String>()
+    private val _currentKatakanaSymbolRomanization = MutableLiveData<String>()
     val currentKatakanaLetterRomanization: LiveData<String>
-        get() = _currentKatakanaLetterRomanization
+        get() = _currentKatakanaSymbolRomanization
 
-    private val _radioButton1Romanization = MutableLiveData<String>()
-    val radioButton1Romanization: LiveData<String>
-        get() = _radioButton1Romanization
+    private val _chip1StringRomanization = MutableLiveData<String>()
+    val chip1StringRomanization: LiveData<String>
+        get() = _chip1StringRomanization
 
-    private val _radioButton2Romanization = MutableLiveData<String>()
-    val radioButton2Romanization: LiveData<String>
-        get() = _radioButton2Romanization
+    private val _chip2StringRomanization = MutableLiveData<String>()
+    val chip2StringRomanization: LiveData<String>
+        get() = _chip2StringRomanization
 
-    private val _radioButton3Romanization = MutableLiveData<String>()
-    val radioButton3Romanization: LiveData<String>
-        get() = _radioButton3Romanization
+    private val _chip3StringRomanization = MutableLiveData<String>()
+    val chip3StringRomanization: LiveData<String>
+        get() = _chip3StringRomanization
 
-    private val _radioButton4Romanization = MutableLiveData<String>()
-    val radioButton4Romanization: LiveData<String>
-        get() = _radioButton4Romanization
+    private val _chip4StringRomanization = MutableLiveData<String>()
+    val chip4StringRomanization: LiveData<String>
+        get() = _chip4StringRomanization
 
-    private val _gameScore = MutableLiveData<Short>()
-    val gameScore: LiveData<Short>
+    private val _gameProgress = MutableLiveData<Int>()
+    val gameProgress: LiveData<Int>
+        get() = _gameProgress
+
+    private val _gameScore = MutableLiveData<Int>()
+    val gameScore: LiveData<Int>
         get() = _gameScore
+
+    private val _currentGameTime = MutableLiveData<Long>()
+    val currentGameTime: LiveData<Long>
+        get() = _currentGameTime
+
+    val currentGameTimeInt = Transformations.map(currentGameTime) { it.toInt() }
 
     //==========================================================================================
     // MutableLiveData variables for game events
@@ -49,6 +75,10 @@ class MainGameScreenViewModel : ViewModel() {
     val eventCorrectAnswer: LiveData<Boolean>
         get() = _eventCorrectAnswer
 
+    private val _eventTimeOver = MutableLiveData<Boolean>()
+    val eventTimeOver: LiveData<Boolean>
+        get() = _eventTimeOver
+
     private val _eventGameFinished = MutableLiveData<Boolean>()
     val eventGameFinished: LiveData<Boolean>
         get() = _eventGameFinished
@@ -56,165 +86,181 @@ class MainGameScreenViewModel : ViewModel() {
     //==========================================================================================
     // Other variables
     //==========================================================================================
-    val katakanaLettersList: MutableList<Katakana> = katakanaLetters.toMutableList()
+    val katakanaSymbolsMutableList: MutableList<KatakanaSymbol> =
+        katakanaSymbolsList.toMutableList()
 
-    private var lastKatakanaLetterString: String? = null
-    private var lastKatakanaLetterLetterRomanization: String? = null
+    private var lastKatakanaSymbolString = ""
+    private var lastKatakanaSymbolRomanization = ""
 
-    //==========================================================================================
-    // init block
-    //==========================================================================================
+    lateinit var countDownTimer: CountDownTimer
+    private var difficultyCountDownTime: Long
+    var gameTimerProgressBarValue: Int
+
     init {
+        _gameProgress.value = 0
+
         _gameScore.value = 0
 
         _eventGameFinished.value = false
 
+        difficultyCountDownTime = when (gameDifficultyValue) {
+            GAME_DIFFICULTY_VALUE_BEGINNER -> COUNTDOWN_TIME_BEGINNER
+            GAME_DIFFICULTY_VALUE_MEDIUM -> COUNTDOWN_TIME_MEDIUM
+            else -> COUNTDOWN_TIME_HARD
+        }
+
+        gameTimerProgressBarValue = when (gameDifficultyValue) {
+            GAME_DIFFICULTY_VALUE_BEGINNER -> PROGRESS_BAR_MAX_BEGINNER
+            GAME_DIFFICULTY_VALUE_MEDIUM -> PROGRESS_BAR_MAX_MEDIUM
+            else -> PROGRESS_BAR_MAX_HARD
+        }
+
         startGame()
     }
 
-    //==========================================================================================
-    // startGame function
-    //==========================================================================================
     /**
-     * Function that is responsible for key tasks necessary for starting the game.
+     * Performs essential tasks necessary for starting the game.
      */
     private fun startGame() {
-        // Shuffling the katakanaLettersList list
-        katakanaLettersList.shuffle()
+        katakanaSymbolsMutableList.shuffle()
 
-        // Getting the first drawableSymbolId and romanization from the list
-        _currentKatakanaLetterString.value = katakanaLettersList.first().letter
-        _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization
+        _currentKatakanaSymbolString.value = katakanaSymbolsMutableList.first().symbol
+        _currentKatakanaSymbolRomanization.value = katakanaSymbolsMutableList.first().romanization
 
-        // Getting the last drawableSymbolId and romanization from the list
-        lastKatakanaLetterString = katakanaLettersList.last().letter
-        lastKatakanaLetterLetterRomanization = katakanaLettersList.last().romanization
+        lastKatakanaSymbolString = katakanaSymbolsMutableList.last().symbol
+        lastKatakanaSymbolRomanization = katakanaSymbolsMutableList.last().romanization
 
-        generateRadioButtonRomanization()
+        generateChipGroupRomanization()
+
+        startGameTimer(difficultyCountDownTime)
     }
 
-    //==========================================================================================
-    // checkUserInput function
-    //==========================================================================================
     /**
-     * Function responsible for checking the user's input (answer).
+     * Sets up the game timer.
      *
-     * @param selectedRomanization - String of the current checked radio button
+     * @param countDownTime Long to be used as the countdown time for the timer.
+     */
+    fun startGameTimer(countDownTime: Long) {
+        countDownTimer = object : CountDownTimer(countDownTime, ONE_SECOND) {
+            override fun onTick(millisUntilFinished: Long) {
+                _currentGameTime.value = (millisUntilFinished / ONE_SECOND)
+            }
+
+            override fun onFinish() {
+                cancel()
+                _eventTimeOver.value = true
+            }
+        }
+        countDownTimer.start()
+    }
+
+    /**
+     * Checks the user's input (answer).
+     *
+     * @param selectedRomanization String of the romanization to be evaluated.
      */
     fun checkUserInput(selectedRomanization: String) {
-        /*
-        Checking if the current romanization equals the selected romanization, if it is, the
-        answer is correct and the game score is updated, else it's incorrect
-        */
-        if (_currentKatakanaLetterRomanization.value == selectedRomanization) {
+        if (_currentKatakanaSymbolRomanization.value == selectedRomanization) {
             _eventCorrectAnswer.value = true
 
-            updateGameScore()
+            incrementGameScore()
         } else {
             _eventCorrectAnswer.value = false
         }
     }
 
-    //==========================================================================================
-    // getNextLetter function
-    //==========================================================================================
     /**
-     * Function responsible for removing the current letter, and getting the next one from the
-     * list.
+     * Removes the current letter, and gets the next one from the list. It also calls other
+     * functions to set up the UI for the game.
      */
     fun getNextLetter() {
-        // Removing the first element (Katakana letter) from the list
-        katakanaLettersList.removeAt(0)
+        katakanaSymbolsMutableList.removeAt(0)
 
-        // Getting the first letter from the katakanaLettersList list
-        _currentKatakanaLetterString.value = katakanaLettersList.first().letter
-        _currentKatakanaLetterRomanization.value = katakanaLettersList.first().romanization
+        _currentKatakanaSymbolString.value = katakanaSymbolsMutableList.first().symbol
+        _currentKatakanaSymbolRomanization.value = katakanaSymbolsMutableList.first().romanization
 
-        generateRadioButtonRomanization()
+        generateChipGroupRomanization()
+
+        incrementGameProgress()
+
+        startGameTimer(difficultyCountDownTime)
     }
 
-    //==========================================================================================
-    // getLastLetter function
-    //==========================================================================================
     /**
-     * Function responsible for getting the last letter from the list and setting its contents
-     * to the UI. It also checks the user input and finishes the game.
+     * Gets the last letter from the list and sets its contents to the UI. It also checks the
+     * user input and finishes the game.
+     *
+     * @param selectedRomanization String of the current checked chip button.
      */
     fun getLastLetter(selectedRomanization: String) {
-        /*
-         Setting the value of the current katakana letter as the value of the last letter
-         from the list
-        */
-        _currentKatakanaLetterString.value = lastKatakanaLetterString
-        _currentKatakanaLetterRomanization.value = lastKatakanaLetterLetterRomanization
+        _currentKatakanaSymbolString.value = lastKatakanaSymbolString
+        _currentKatakanaSymbolRomanization.value = lastKatakanaSymbolRomanization
 
-        if (_currentKatakanaLetterRomanization.value == selectedRomanization) {
+        if (_currentKatakanaSymbolRomanization.value == selectedRomanization) {
             _eventCorrectAnswer.value = true
 
-            updateGameScore()
+            incrementGameScore()
 
-            // Setting the value of _eventGameFinished as TRUE to finish the game
+            incrementGameProgress()
+
             _eventGameFinished.value = true
         } else {
+            incrementGameProgress()
+
             _eventCorrectAnswer.value = false
 
-            // Setting the value of _eventGameFinished as TRUE to finish the game
             _eventGameFinished.value = true
         }
     }
 
-    //==========================================================================================
-    // updateGameScore function
-    //==========================================================================================
     /**
-     * Function that increments the game score by 1
+     * Increments the game score.
      */
-    private fun updateGameScore() {
+    private fun incrementGameScore() {
         _gameScore.value = (_gameScore.value)?.inc()
     }
 
-    //==========================================================================================
-    // generateRadioButtonRomanizations function
-    //==========================================================================================
     /**
-     * Function that generates random romanizations for the radio buttons. It also selects which
-     * button will receive the current letter romanization (the correct answer).
+     * Increments the game progress.
      */
-    private fun generateRadioButtonRomanization() {
-        // List containing romanizations to be used as distractions
+    private fun incrementGameProgress() {
+        _gameProgress.value = (_gameProgress.value)?.inc()
+    }
+
+    /**
+     * Generates random romanizations for the chip buttons. It also selects which of them will
+     * receive the current letter romanization (the correct answer).
+     */
+    private fun generateChipGroupRomanization() {
         val katakanaRomanizationList = listOf(
             "A", "I", "U", "E", "O", "KA", "KI", "KU", "KE", "KO", "SA", "SHI", "SU", "SE", "SO",
-            "TA", "CHI", "TSU", "TSE", "TO", "NA", "NI", "NU", "NE", "NO", "HA", "HI", "FU", "HE",
+            "TA", "CHI", "TSU", "TE", "TO", "NA", "NI", "NU", "NE", "NO", "HA", "HI", "FU", "HE",
             "HO", "MA", "MI", "MU", "ME", "MO", "YA", "YU", "YO", "RA", "RI", "RU", "RE", "RO",
             "WA", "WI", "WE", "WO", "N"
         )
 
-        /*
-         List that takes the katakanaRomanizationList, applies a filter (to remove the
-         romanization that matches the current one), and shuffles it.
-        */
         val filteredList =
-            katakanaRomanizationList.filterNot { it == _currentKatakanaLetterRomanization.value }
+            katakanaRomanizationList.filterNot { it == _currentKatakanaSymbolRomanization.value }
                 .shuffled()
 
-        // Getting a random romanization for each radio button from the filteredList
-        _radioButton1Romanization.value = filteredList.slice(0..13).random()
+        _chip1StringRomanization.value = filteredList.slice(0..13).random()
 
-        _radioButton2Romanization.value = filteredList.slice(14..27).random()
+        _chip2StringRomanization.value = filteredList.slice(14..27).random()
 
-        _radioButton3Romanization.value = filteredList.slice(28..42).random()
+        _chip3StringRomanization.value = filteredList.slice(28..42).random()
 
-        _radioButton4Romanization.value = filteredList.slice(43..46).random()
+        _chip4StringRomanization.value = filteredList.slice(43..46).random()
 
-        /*
-        Generating a random number between 0 and 4, and based on that number, a radio button
-        will be selected to contain the current romanization for the letter on the screen.
-        */
-        when ((0 until 4).random()) {
-            0 -> _radioButton1Romanization.value = _currentKatakanaLetterRomanization.value
-            1 -> _radioButton2Romanization.value = _currentKatakanaLetterRomanization.value
-            2 -> _radioButton3Romanization.value = _currentKatakanaLetterRomanization.value
-            3 -> _radioButton4Romanization.value = _currentKatakanaLetterRomanization.value
+        when (Random.nextInt(4)) {
+            0 -> _chip1StringRomanization.value = _currentKatakanaSymbolRomanization.value
+            1 -> _chip2StringRomanization.value = _currentKatakanaSymbolRomanization.value
+            2 -> _chip3StringRomanization.value = _currentKatakanaSymbolRomanization.value
+            3 -> _chip4StringRomanization.value = _currentKatakanaSymbolRomanization.value
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        countDownTimer.cancel()
     }
 }

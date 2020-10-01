@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <plurals name="game_score_plurals">
-        <item quantity="one">I got %d point on the Katakana Learner app. Can you beat my score?</item>
-        <item quantity="other">I got %d points on the Katakana Learner app. Can you beat my score?</item>
-    </plurals>
-</resources>

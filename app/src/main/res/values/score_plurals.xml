@@ -1,0 +1,6 @@
+<resources>
+    <plurals name="game_score_plurals">
+        <item quantity="one">I got %d out of 48 symbols on the Katakana Learner Randomizer app. Can you beat my score?</item>
+        <item quantity="other">I got %d out of 48 symbols on the Katakana Learner Randomizer app. Can you beat my score?</item>
+    </plurals>
+</resources>

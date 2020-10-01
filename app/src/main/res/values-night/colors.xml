@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#388E3C</color>
+    <!-- Primary color desaturated -->
+    <color name="colorPrimary">#81c784</color>
 
-    <!-- Background color -->
-    <color name="background">@android:color/black</color>
+    <!-- Primary variant -->
+    <color name="colorPrimaryDark">#121212</color>
 
+    <!-- FAB Icon color -->
+    <color name="fabIconColor">@android:color/black</color>
 </resources>

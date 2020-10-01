@@ -1,81 +1,115 @@
 package com.mathsemilio.katakanalearner.ui.fragment
 
-import android.content.DialogInterface
+import android.media.SoundPool
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.preference.PreferenceManager
+import com.google.android.material.chip.Chip
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.MainGameScreenBinding
-import com.mathsemilio.katakanalearner.ui.viewModel.MainGameScreenViewModel
+import com.mathsemilio.katakanalearner.others.*
+import com.mathsemilio.katakanalearner.ui.viewModel.MainGameViewModel
+import com.mathsemilio.katakanalearner.ui.viewModel.MainGameViewModelFactory
 
 /**
- * Fragment class for the game's main screen.
+ * Fragment class for the main game screen
  */
 class MainGameScreen : Fragment() {
 
-    //==========================================================================================
-    // Class-wide variables
-    //==========================================================================================
-    private lateinit var viewModel: MainGameScreenViewModel
-    private lateinit var binding: MainGameScreenBinding
+    /**
+     * Enum for representing the Fragment States, used to manage how the timer will behave
+     * during the fragment's lifecycle states.
+     */
+    private enum class FragmentState { RUNNING, PAUSED, DIALOG_BEING_SHOWN }
 
-    //==========================================================================================
-    // onCreateView
-    //==========================================================================================
+    private var _binding: MainGameScreenBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var viewModelFactory: MainGameViewModelFactory
+    private lateinit var viewModel: MainGameViewModel
+    private lateinit var soundPool: SoundPool
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private var currentFragmentState = FragmentState.RUNNING
+    private var gameDifficultyValue = 0
+    private var soundEffectsEnable = true
+    private var soundEffectsVolume = 0f
+    private var soundClick = 0
+    private var soundButtonClick = 0
+    private var soundCorrectAnswer = 0
+    private var soundWrongAnswer = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        /*
-        Inflating the layout utilizing the DataBindingUtil function from the fragment's binding
-        class
-        */
-        binding = DataBindingUtil.inflate(inflater, R.layout.main_game_screen, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.main_game_screen, container, false)
 
-        // Getting the viewModel pertaining this fragment
-        viewModel = ViewModelProvider(this).get(MainGameScreenViewModel::class.java)
+        initializeVariables()
 
-        /*
-        Setting the ViewModel for Data Binding - this allows the UI elements in the layout to
-        access the data in the ViewModel directly
-        */
+        setupUI()
+
+        subscribeToObservers()
+
+        return binding.root
+    }
+
+    private fun initializeVariables() {
+        gameDifficultyValue = MainGameScreenArgs.fromBundle(requireArguments()).gameDifficultyValue
+
+        viewModelFactory = MainGameViewModelFactory(gameDifficultyValue)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainGameViewModel::class.java)
+
         binding.mainGameViewModel = viewModel
 
-        /*
-        Setting the current activity as the lifecycle owner of the binding, so that the binding
-        can observe LiveData updates
-        */
         binding.lifecycleOwner = this
 
-        /*
-        Listener for the radioGroupKatakanaLetters radio group to enable or disable the
-        buttonVerifyAnswer button
-        */
-        binding.radioGroupKatakanaLetters.setOnCheckedChangeListener { group, checkedId ->
+        soundEffectsVolume = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .getInt(SOUND_EFFECTS_VOLUME_PREF_KEY, 0).toFloat().div(10f)
+
+        if (soundEffectsVolume == 0f) {
+            soundEffectsEnable = false
+        } else {
+            soundPool = setupSoundPool(2)
+            loadSounds()
+        }
+    }
+
+    /**
+     * Sets up the UI, attaches listeners for the Floating Action Buttons and configures a
+     * onBackPressed callback.
+     */
+    private fun setupUI() {
+        binding.textBodyGameDifficulty.text = when (gameDifficultyValue) {
+            GAME_DIFFICULTY_VALUE_BEGINNER -> getString(R.string.game_difficulty_beginner)
+            GAME_DIFFICULTY_VALUE_MEDIUM -> getString(R.string.game_difficulty_medium)
+            else -> getString(R.string.game_difficulty_hard)
+        }
+
+        binding.chipGroupRomanizationOptions.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == -1) {
-                binding.buttonVerifyAnswer.isEnabled = false
+                binding.fabCheckAnswer.isEnabled = false
             } else {
-                binding.buttonVerifyAnswer.isEnabled = true
+                if (soundEffectsEnable)
+                    soundPool.play(soundClick, soundEffectsVolume, soundEffectsVolume, 0, 0, 1F)
 
-                // Getting the text from the checked radio button
-                val radioButton: RadioButton = group.findViewById(checkedId)
-                val selectedRomanization = radioButton.text.toString()
+                binding.fabCheckAnswer.isEnabled = true
 
-                // Listener for the buttonVerifyAnswer button
-                binding.buttonVerifyAnswer.setOnClickListener {
-                    /*
-                    Checking the katakanaLettersList size, if equals 1, the getLastLetter
-                    function is called, else checkUserInput is called.
-                    */
-                    if (viewModel.katakanaLettersList.size == 1) {
+                val selectedChip = group.findViewById<Chip>(checkedId)
+                val selectedRomanization: String = selectedChip.text.toString()
+
+                binding.fabCheckAnswer.setOnClickListener {
+                    viewModel.countDownTimer.cancel()
+
+                    currentFragmentState = FragmentState.DIALOG_BEING_SHOWN
+
+                    if (viewModel.katakanaSymbolsMutableList.size == 1) {
                         viewModel.getLastLetter(selectedRomanization)
                     } else {
                         viewModel.checkUserInput(selectedRomanization)
@@ -84,105 +118,266 @@ class MainGameScreen : Fragment() {
             }
         }
 
-        // Listener for the buttonExit button
-        binding.buttonExit.setOnClickListener { navigateToWelcomeScreen() }
+        binding.fabExit.setOnClickListener {
+            if (soundEffectsEnable)
+                soundPool.play(soundButtonClick, soundEffectsVolume, soundEffectsVolume, 0, 0, 1F)
 
-        /*
-        Observing the eventCorrectAnswer to show an alert dialog based on if the user's answer
-        is correct or not.
-        */
-        viewModel.eventCorrectAnswer.observe(viewLifecycleOwner, Observer { answerIsCorrect ->
-            if (answerIsCorrect == true) {
-                // Building an AlertDialog to alert the user that his answer is correct
-                buildAlertDialog(
-                    R.string.alertDialogCorrectAnswer_title,
-                    getString(R.string.alertDialogCorrectAnswer_msg),
-                    R.string.alertDialogCorrectAnswer_positive_button_text,
-                    DialogInterface.OnClickListener { _, _ ->
-                        /*
-                        Checking the eventGameFinished value, if it's true, the
-                        navigateToScoreScreen is called, else, the getNextLetter function is
-                        called and the radioGroupKatakanaLetters radio group is cleared.
-                        */
-                        if (viewModel.eventGameFinished.value == true) {
-                            navigateToScoreScreen(viewModel.gameScore.value!!.toInt())
-                        } else {
-                            viewModel.getNextLetter()
-                            binding.radioGroupKatakanaLetters.clearCheck()
-                        }
+            currentFragmentState = FragmentState.DIALOG_BEING_SHOWN
+
+            viewModel.countDownTimer.cancel()
+
+            requireContext().buildMaterialDialog(
+                getString(R.string.alert_dialog_exit_game_title),
+                getString(R.string.alert_dialog_exit_game_message),
+                getString(R.string.alert_dialog_exit_game_positive_button_text),
+                getString(R.string.alert_dialog_exit_game_negative_button_text),
+                false,
+                { _, _ ->
+                    if (soundEffectsEnable)
+                        soundPool.play(
+                            soundButtonClick,
+                            soundEffectsVolume,
+                            soundEffectsVolume,
+                            0,
+                            0,
+                            1F
+                        )
+                    findNavController().navigate(R.id.action_mainGameScreen_to_gameWelcomeScreen)
+                },
+                { _, _ ->
+                    if (soundEffectsEnable)
+                        soundPool.play(
+                            soundButtonClick,
+                            soundEffectsVolume,
+                            soundEffectsVolume,
+                            0,
+                            0,
+                            1F
+                        )
+
+                    viewModel.startGameTimer(viewModel.currentGameTime.value!!.times(1000))
+                    currentFragmentState = FragmentState.RUNNING
+                }
+            )
+        }
+
+        binding.fabPauseTimer.setOnClickListener {
+            if (soundEffectsEnable)
+                soundPool.play(soundButtonClick, soundEffectsVolume, soundEffectsVolume, 0, 0, 1F)
+
+            currentFragmentState = FragmentState.DIALOG_BEING_SHOWN
+
+            viewModel.countDownTimer.cancel()
+
+            requireContext().buildMaterialDialog(
+                getString(R.string.alert_dialog_game_paused_title),
+                getString(R.string.alert_dialog_game_paused_message),
+                getString(R.string.alert_dialog_game_paused_positive_button_text),
+                null, false,
+                { _, _ ->
+                    if (soundEffectsEnable)
+                        soundPool.play(
+                            soundButtonClick,
+                            soundEffectsVolume,
+                            soundEffectsVolume,
+                            0,
+                            0,
+                            1F
+                        )
+                    viewModel.startGameTimer(viewModel.currentGameTime.value!!.times(1000))
+                    currentFragmentState = FragmentState.RUNNING
+                },
+                null
+            )
+        }
+
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                currentFragmentState = FragmentState.DIALOG_BEING_SHOWN
+
+                viewModel.countDownTimer.cancel()
+
+                requireContext().buildMaterialDialog(
+                    getString(R.string.alert_dialog_on_back_pressed_title),
+                    getString(R.string.alert_dialog_on_back_pressed_message),
+                    getString(R.string.alert_dialog_on_back_pressed_positive_button_text),
+                    getString(R.string.alert_dialog_on_back_pressed_negative_button_text),
+                    false,
+                    { _, _ ->
+                        if (soundEffectsEnable)
+                            soundPool.play(
+                                soundButtonClick,
+                                soundEffectsVolume,
+                                soundEffectsVolume,
+                                0,
+                                0,
+                                1F
+                            )
+                        viewModel.startGameTimer(viewModel.currentGameTime.value!!.times(1000))
+                        currentFragmentState = FragmentState.RUNNING
+                    },
+                    { _, _ ->
+                        if (soundEffectsEnable)
+                            soundPool.play(
+                                soundButtonClick,
+                                soundEffectsVolume,
+                                soundEffectsVolume,
+                                0,
+                                0,
+                                1F
+                            )
+
+                        findNavController().navigate(R.id.action_mainGameScreen_to_gameWelcomeScreen)
                     }
                 )
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+    }
+
+    /**
+     * Subscribes to the observers to observe game event related LiveData variables.
+     */
+    private fun subscribeToObservers() {
+        viewModel.eventCorrectAnswer.observe(viewLifecycleOwner, { answerIsCorrect ->
+            if (answerIsCorrect) {
+                if (soundEffectsEnable)
+                    soundPool.play(
+                        soundCorrectAnswer,
+                        soundEffectsVolume,
+                        soundEffectsVolume,
+                        1,
+                        0,
+                        1F
+                    )
+
+                requireContext().buildMaterialDialog(
+                    getString(R.string.alert_dialog_correct_answer_title),
+                    getString(R.string.alert_dialog_correct_answer_message),
+                    getString(R.string.alert_dialog_correct_answer_positive_button_text),
+                    null,
+                    false,
+                    { _, _ -> checkEventGameFinished() },
+                    null
+                )
             } else {
-                // Building an AlertDialog to alert the user that his answer is incorrect
-                buildAlertDialog(
-                    R.string.alertDialogWrongAnswer_title,
+                if (soundEffectsEnable)
+                    soundPool.play(
+                        soundWrongAnswer,
+                        soundEffectsVolume,
+                        soundEffectsVolume,
+                        1,
+                        0,
+                        1F
+                    )
+
+                requireContext().buildMaterialDialog(
+                    getString(R.string.alert_dialog_wrong_answer_title),
                     getString(
-                        R.string.alertDialogWrongAnswer_msg,
-                        viewModel.currentKatakanaLetterRomanization.value
+                        R.string.alert_dialog_wrong_answer_message,
+                        viewModel.currentKatakanaLetterRomanization.value!!
                     ),
-                    R.string.alertDialogWrongAnswer_positive_button_text,
-                    DialogInterface.OnClickListener { _, _ ->
-                        if (viewModel.eventGameFinished.value == true) {
-                            navigateToScoreScreen(viewModel.gameScore.value!!.toInt())
-                        } else {
-                            viewModel.getNextLetter()
-                            binding.radioGroupKatakanaLetters.clearCheck()
-                        }
-                    }
+                    getString(R.string.alert_dialog_wrong_answer_positive_button_text),
+                    null,
+                    false,
+                    { _, _ -> checkEventGameFinished() },
+                    null
                 )
             }
         })
 
-        // Returning the root of the inflated layout
-        return binding.root
+        viewModel.eventTimeOver.observe(viewLifecycleOwner, { timeIsOver ->
+            if (timeIsOver) {
+                if (soundEffectsEnable)
+                    soundPool.play(
+                        soundWrongAnswer,
+                        soundEffectsVolume,
+                        soundEffectsVolume,
+                        1,
+                        0,
+                        1F
+                    )
+
+                requireContext().buildMaterialDialog(
+                    getString(R.string.alert_dialog_time_over_title),
+                    getString(
+                        R.string.alert_dialog_time_over_message,
+                        viewModel.currentKatakanaLetterRomanization.value!!
+                    ),
+                    getString(R.string.alert_dialog_time_over_positive_button_text),
+                    null,
+                    false,
+                    { _, _ -> checkEventGameFinished() },
+                    null
+                )
+            }
+        })
     }
 
-    //==========================================================================================
-    // navigateToWelcomeScreen function
-    //==========================================================================================
-    /**
-     * Function to navigate from the current screen to the welcome screen.
-     */
-    private fun navigateToWelcomeScreen() {
-        findNavController().navigate(R.id.action_mainGameScreen_to_gameWelcomeScreen)
+    private fun loadSounds() {
+        soundClick = soundPool.load(requireContext(), R.raw.brandondelehoy_series_of_clicks, 1)
+        soundButtonClick = soundPool.load(requireContext(), R.raw.jaoreir_button_simple_01, 2)
+        soundCorrectAnswer =
+            soundPool.load(requireContext(), R.raw.mativve_electro_success_sound, 3)
+        soundWrongAnswer = soundPool.load(requireContext(), R.raw.autistic_lucario_error, 3)
     }
 
-    //==========================================================================================
-    // navigateToScoreScreen function
-    //==========================================================================================
     /**
-     * Function to navigate from the current screen to the score screen, while passing the game's
-     * score to the destination.
+     * Navigates, checks if the game score is equal to a perfect score, and passes the game
+     * difficulty value and the game score to GameScoreScreen.
      *
-     * @param gameScore - Integer for the game score to be passed to the score fragment
+     * @param gameScore Integer that represents the game score to sent to the GameScoreScreen
+     * @param gameDifficultyValue Integer that represents the game difficulty value to be sent
+     * to the GameScoreScreen.
      */
-    private fun navigateToScoreScreen(gameScore: Int) {
-        findNavController()
-            .navigate(MainGameScreenDirections.actionMainGameScreenToGameScoreScreen(gameScore))
+    private fun navigateToScoreScreen(gameScore: Int, gameDifficultyValue: Int) {
+        if (gameScore == PERFECT_SCORE)
+            SharedPreferencesPerfectScores(requireContext()).incrementPerfectScore()
+
+        val action = MainGameScreenDirections.actionMainGameScreenToGameScoreScreen(
+            gameScore,
+            gameDifficultyValue
+        )
+
+        findNavController().navigate(action)
     }
 
-    //==========================================================================================
-    // buildAlertDialog function
-    //==========================================================================================
     /**
-     * Function to build an alert dialog to alert the user about certain game events.
-     *
-     * @param title - Integer for title's resource id
-     * @param message - String for the dialog's message
-     * @param positiveButtonText - Integer for the dialog's positive button resource id
-     * @param listener - DialogInterface.OnClickListener for listening when the positive button
-     * is clicked
+     * Checks if the eventGameFinished value is true, if it is, the navigateToScreen will be
+     * called, else, the chip group will be cleared of any checked buttons and the getNextLetter
+     * function from the ViewModel will be called.
      */
-    private fun buildAlertDialog(
-        title: Int, message: String, positiveButtonText: Int,
-        listener: DialogInterface.OnClickListener
-    ) {
-        MaterialAlertDialogBuilder(activity).apply {
-            setTitle(title)
-            setMessage(message)
-            setPositiveButton(positiveButtonText, listener)
-            setCancelable(false)
-            show()
+    private fun checkEventGameFinished() {
+        if (viewModel.eventGameFinished.value == true) {
+            navigateToScoreScreen(viewModel.gameScore.value!!, gameDifficultyValue)
+        } else {
+            binding.chipGroupRomanizationOptions.clearCheck()
+            viewModel.getNextLetter()
         }
+    }
+
+    override fun onPause() {
+        viewModel.countDownTimer.cancel()
+
+        if (currentFragmentState == FragmentState.RUNNING)
+            currentFragmentState = FragmentState.PAUSED
+
+        super.onPause()
+    }
+
+    override fun onResume() {
+        if (currentFragmentState == FragmentState.PAUSED) {
+            viewModel.startGameTimer(viewModel.currentGameTime.value!!.times(1000))
+        }
+
+        super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

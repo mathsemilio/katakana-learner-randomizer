@@ -1,11 +1,15 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="katakana_learner_chip_style">
+        <item name="android:checkable">true</item>
+        <item name="chipStrokeWidth">0.8dp</item>
+        <item name="chipBackgroundColor">@android:color/transparent</item>
     </style>
 
 </resources>
