@@ -25,7 +25,7 @@ val katakanaSymbolsList: List<KatakanaSymbol> = listOf(
     KatakanaSymbol(symbol = "タ", romanization = "TA"),
     KatakanaSymbol(symbol = "チ", romanization = "CHI"),
     KatakanaSymbol(symbol = "ツ", romanization = "TSU"),
-    KatakanaSymbol(symbol = "テ", romanization = "TSE"),
+    KatakanaSymbol(symbol = "テ", romanization = "TE"),
     KatakanaSymbol(symbol = "ト", romanization = "TO"),
 
     KatakanaSymbol(symbol = "ナ", romanization = "NA"),
