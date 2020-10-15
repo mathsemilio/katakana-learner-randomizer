@@ -3,38 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mathsemilio.katakanalearner">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <compatible-screens>
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="xhdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="xxxhdpi"
-            android:screenSize="small" />
-
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="xhdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="xxhdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="xxxhdpi"
-            android:screenSize="normal" />
-    </compatible-screens>
+    <supports-screens android:largestWidthLimitDp="2048" />
 
     <application
         android:name=".others.KatakanaRandomizerApplication"
@@ -46,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5242007423595790~9952474119" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait">

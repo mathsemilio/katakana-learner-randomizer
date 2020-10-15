@@ -72,7 +72,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     getString(R.string.clear_perfect_score_dialog_message),
                     getString(R.string.clear_perfect_score_dialog_positive_button_text),
                     getString(R.string.clear_perfect_score_dialog_negative_button_text),
-                    true,
+                    cancelable = true,
                     { _, _ ->
                         SharedPreferencesPerfectScores(requireContext())
                             .clearPerfectScores()
@@ -80,7 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         findPreference<Preference>(CLEAR_PERFECT_SCORES_PREF_KEY)
                             ?.isVisible = false
                     },
-                    null
+                    negativeButtonListener = null
                 )
             }
             APP_THEME_PREF_KEY -> {
@@ -92,13 +92,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return super.onPreferenceTreeClick(preference)
     }
 
-    /**
-     * Updates the checked state for the training notification preference based on the
-     * parameter's value.
-     *
-     * @param state Boolean to represent the Switch state (e.g True - Switch checked,
-     * False - Switch unchecked)
-     */
     private fun updateTrainingNotificationState(state: Boolean) {
         when (state) {
             true -> {
@@ -112,9 +105,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /**
-     * Updates the title for the training notification preference based on checked state.
-     */
     private fun updateTrainingNotificationPreferenceTitle() {
         notificationPreference.title = when (notificationPreference.isChecked) {
             true -> getString(R.string.preference_title_training_notification_checked)
@@ -122,10 +112,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /**
-     * Updates the summary for the clear perfect scores if the perfect score value saved on
-     * the SharedPreferences is not equal to 0, in which case, the preference will be hidden.
-     */
     private fun setupClearPerfectScoresPreference() {
         if (SharedPreferencesPerfectScores(requireContext()).retrievePerfectScore() == 0) {
             findPreference<Preference>(CLEAR_PERFECT_SCORES_PREF_KEY)?.isVisible = false
@@ -134,11 +120,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /**
-     * Sets the summary on for the Notification preference.
-     *
-     * @param formattedTime Formatted time to be used in the summary
-     */
     private fun setSummaryForNotificationPreference(formattedTime: String) {
         if (notificationPreference.isChecked) {
             notificationPreference.summaryOn = getString(
@@ -148,9 +129,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /**
-     * Sets up a summary provider for the Default Game difficulty preference.
-     */
     private fun setupSummaryProviderForGameDefaultDifficultyPreference() {
         findPreference<ListPreference>(DEFAULT_GAME_DIFFICULTY_PREF_KEY)?.setSummaryProvider {
             return@setSummaryProvider when (PreferenceManager.getDefaultSharedPreferences(
@@ -164,9 +142,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /**
-     * Sets up a summary provider for the clear perfect scores number preference.
-     */
     private fun setSummaryProviderForClearPerfectScoresPreference() {
         findPreference<Preference>(CLEAR_PERFECT_SCORES_PREF_KEY)?.setSummaryProvider {
             return@setSummaryProvider getString(
@@ -176,10 +151,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /**
-     * Sets up a summary provider for the app theme preference, in order to inform the user of
-     * which theme is currently selected.
-     */
     private fun setupSummaryProviderForAppThemePreference() {
         findPreference<Preference>(APP_THEME_PREF_KEY)?.setSummaryProvider {
             return@setSummaryProvider when (SharedPreferencesAppTheme(requireContext())
@@ -191,9 +162,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /**
-     * Sets up the Time Picker dialog for the Training notification.
-     */
     private fun setupTimePickerDialog() {
         val calendar = Calendar.getInstance()
 
@@ -248,44 +216,30 @@ class SettingsFragment : PreferenceFragmentCompat() {
             android.text.format.DateFormat.is24HourFormat(requireContext())
         )
 
-        timePickerDialog.setOnCancelListener {
-            notificationPreference.isChecked = false
-        }
+        timePickerDialog.setOnCancelListener { notificationPreference.isChecked = false }
 
         timePickerDialog.setCancelable(false)
         timePickerDialog.setCanceledOnTouchOutside(false)
         timePickerDialog.show()
     }
 
-    /**
-     * Schedules the Work that triggers the training notification.
-     *
-     * @param initialDelay Long that represents the amount of time the work will be delayed.
-     */
     private fun scheduleTrainingNotification(initialDelay: Long) {
         val notificationWork = OneTimeWorkRequestBuilder<NotificationWorkManager>()
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .addTag(TRAINING_NOTIFICATION_TAG)
             .build()
 
-        val workManager = WorkManager.getInstance(requireContext())
-        workManager.enqueue(notificationWork)
+        WorkManager.getInstance(requireContext()).apply {
+            enqueue(notificationWork)
+        }
     }
 
-    /**
-     * Cancels the work that triggers the training notification.
-     */
     private fun cancelTrainingNotification() {
-        val workManager = WorkManager.getInstance(requireContext())
-        workManager.cancelAllWorkByTag(TRAINING_NOTIFICATION_TAG)
+        WorkManager.getInstance(requireContext()).apply {
+            cancelAllWorkByTag(TRAINING_NOTIFICATION_TAG)
+        }
     }
 
-    /**
-     * Formats the time set by the user in the TimePicker dialog.
-     *
-     * @param timeSetInMillis Time to be formatted.
-     * @return Formatted time
-     */
     private fun formatTimeSetByUser(timeSetInMillis: Long): String {
         return when (android.text.format.DateFormat.is24HourFormat(requireContext())) {
             true -> android.text.format.DateFormat.format("HH:mm", timeSetInMillis).toString()

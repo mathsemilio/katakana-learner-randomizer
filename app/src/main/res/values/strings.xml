@@ -1,6 +1,6 @@
 <resources>
     <!-- App name -->
-    <string name="app_name">Katakana Randomizer</string>
+    <string name="app_name" translatable="false">Katakana Randomizer</string>
 
     <!-- Settings toolbar title -->
     <string name="settings_toolbar_title">Settings</string>
@@ -60,6 +60,9 @@
 
     <!-- Score screen strings -->
     <string name="content_description_grade_star">Grade star</string>
+    <string name="content_description_button_for_navigating_to_the_home_screen">Button for navigating to the home screen</string>
+    <string name="content_description_button_for_playing_again">Button for playing the game again</string>
+    <string name="content_description_button_for_sharing_score">Button for sharing the final score</string>
     <string name="perfect_score">Perfect score!</string>
     <string name="perfect_scores_score_screen">Perfect Scores</string>
     <string name="game_difficulty_score_screen">Game Difficulty</string>
@@ -109,5 +112,7 @@
 
     <!-- Intent Create Chooser title -->
     <string name="game_score_create_chooser_title">Share your game score!</string>
+
+    <string name="adUnitInterstitialId" translatable="false">ca-app-pub-5242007423595790/3550060758</string>
 
 </resources>

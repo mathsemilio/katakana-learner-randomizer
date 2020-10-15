@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.chip.Chip
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.databinding.GameWelcomeScreenBinding
@@ -19,10 +22,19 @@ import com.mathsemilio.katakanalearner.others.*
  */
 class GameWelcomeScreen : Fragment() {
 
+    companion object {
+        const val SHOW_OPTIONS = "0"
+        const val DEFAULT_DIFFICULTY_EASY = "1"
+        const val DEFAULT_DIFFICULTY_MEDIUM = "2"
+        const val DEFAULT_DIFFICULTY_HARD = "3"
+    }
+
     private var _binding: GameWelcomeScreenBinding? = null
     private val binding get() = _binding!!
     private lateinit var defaultSharedPreferences: SharedPreferences
     private lateinit var soundPool: SoundPool
+    private lateinit var interstitialAd: InterstitialAd
+    private var gameDifficultyValue = 0
     private var soundEffectsEnabled = true
     private var soundEffectsVolume = 0f
     private var soundButtonClick = 0
@@ -34,6 +46,20 @@ class GameWelcomeScreen : Fragment() {
     ): View? {
         _binding = GameWelcomeScreenBinding.inflate(inflater, container, false)
 
+        initializeVariables()
+
+        setupInterstitialAd()
+
+        configureGameDifficultyOptions()
+
+        binding.imageViewAppConfigIcon.setOnClickListener {
+            findNavController().navigate(R.id.action_gameWelcomeScreen_to_settingsFragment)
+        }
+
+        return binding.root
+    }
+
+    private fun initializeVariables() {
         defaultSharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(requireContext())
 
@@ -46,25 +72,36 @@ class GameWelcomeScreen : Fragment() {
             soundPool = setupSoundPool(1)
             loadSoundEffects()
         }
-
-        configGameDifficultyOptions()
-
-        binding.imageViewAppConfigIcon.setOnClickListener {
-            findNavController().navigate(R.id.action_gameWelcomeScreen_to_settingsFragment)
-        }
-
-        return binding.root
     }
 
-    /**
-     * Configures and sets up based on the game difficulty value from the default
-     * Shared Preferences.
-     */
-    private fun configGameDifficultyOptions() {
+    private fun setupInterstitialAd() {
+        interstitialAd = InterstitialAd(requireContext()).apply {
+            adUnitId = getString(R.string.adUnitInterstitialId)
+            adListener = (object : AdListener() {
+                override fun onAdClosed() {
+                    startGame(gameDifficultyValue)
+                }
+            })
+            loadAd(AdRequest.Builder().build())
+        }
+    }
 
-        /**
-         * Hides the chip group and enables the Start button
-         */
+    private fun startGame(gameDifficultyValue: Int) {
+        findNavController().navigate(
+            GameWelcomeScreenDirections.actionGameWelcomeScreenToMainGameScreen(gameDifficultyValue)
+        )
+    }
+
+    private fun loadAdAndStartGame(gameDifficultyValue: Int) {
+        if (interstitialAd.isLoaded) {
+            interstitialAd.show()
+        } else {
+            startGame(gameDifficultyValue)
+        }
+    }
+
+    private fun configureGameDifficultyOptions() {
+
         fun setupUIForDifficultyPreviouslySelected() {
             binding.textBodySelectADifficulty.visibility = View.INVISIBLE
             binding.chipGroupGameDifficulty.visibility = View.INVISIBLE
@@ -72,7 +109,7 @@ class GameWelcomeScreen : Fragment() {
         }
 
         when (defaultSharedPreferences.getString(DEFAULT_GAME_DIFFICULTY_PREF_KEY, "0")) {
-            "0" -> {
+            SHOW_OPTIONS -> {
                 binding.chipGroupGameDifficulty.setOnCheckedChangeListener { group, checkedId ->
                     if (checkedId == -1) {
                         binding.buttonStart.isEnabled = false
@@ -91,7 +128,7 @@ class GameWelcomeScreen : Fragment() {
 
                         val checkedRadioButton = group.findViewById<Chip>(checkedId)
 
-                        val gameDifficultyValue = when (checkedRadioButton.text.toString()) {
+                        gameDifficultyValue = when (checkedRadioButton.text.toString()) {
                             getString(R.string.game_difficulty_beginner) -> GAME_DIFFICULTY_VALUE_BEGINNER
                             getString(R.string.game_difficulty_medium) -> GAME_DIFFICULTY_VALUE_MEDIUM
                             else -> GAME_DIFFICULTY_VALUE_HARD
@@ -108,17 +145,12 @@ class GameWelcomeScreen : Fragment() {
                                     1F
                                 )
 
-                            val action =
-                                GameWelcomeScreenDirections.actionGameWelcomeScreenToMainGameScreen(
-                                    gameDifficultyValue
-                                )
-
-                            findNavController().navigate(action)
+                            loadAdAndStartGame(gameDifficultyValue)
                         }
                     }
                 }
             }
-            "1" -> {
+            DEFAULT_DIFFICULTY_EASY -> {
                 setupUIForDifficultyPreviouslySelected()
 
                 binding.textBodyOnGameDifficulty.apply {
@@ -140,15 +172,10 @@ class GameWelcomeScreen : Fragment() {
                             1F
                         )
 
-                    val action =
-                        GameWelcomeScreenDirections.actionGameWelcomeScreenToMainGameScreen(
-                            GAME_DIFFICULTY_VALUE_BEGINNER
-                        )
-
-                    findNavController().navigate(action)
+                    loadAdAndStartGame(GAME_DIFFICULTY_VALUE_BEGINNER)
                 }
             }
-            "2" -> {
+            DEFAULT_DIFFICULTY_MEDIUM -> {
                 setupUIForDifficultyPreviouslySelected()
 
                 binding.textBodyOnGameDifficulty.apply {
@@ -170,15 +197,10 @@ class GameWelcomeScreen : Fragment() {
                             1F
                         )
 
-                    val action =
-                        GameWelcomeScreenDirections.actionGameWelcomeScreenToMainGameScreen(
-                            GAME_DIFFICULTY_VALUE_MEDIUM
-                        )
-
-                    findNavController().navigate(action)
+                    loadAdAndStartGame(GAME_DIFFICULTY_VALUE_MEDIUM)
                 }
             }
-            "3" -> {
+            DEFAULT_DIFFICULTY_HARD -> {
                 setupUIForDifficultyPreviouslySelected()
 
                 binding.textBodyOnGameDifficulty.apply {
@@ -200,12 +222,7 @@ class GameWelcomeScreen : Fragment() {
                             1F
                         )
 
-                    val action =
-                        GameWelcomeScreenDirections.actionGameWelcomeScreenToMainGameScreen(
-                            GAME_DIFFICULTY_VALUE_HARD
-                        )
-
-                    findNavController().navigate(action)
+                    loadAdAndStartGame(GAME_DIFFICULTY_VALUE_HARD)
                 }
             }
         }

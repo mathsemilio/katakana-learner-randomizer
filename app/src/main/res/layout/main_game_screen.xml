@@ -69,8 +69,8 @@
 
             <View
                 android:id="@+id/circle_divider"
-                android:layout_width="@dimen/circle_divider_width"
-                android:layout_height="@dimen/circle_divider_height"
+                android:layout_width="@dimen/circle_divider_dimen"
+                android:layout_height="@dimen/circle_divider_dimen"
                 android:background="@drawable/circle_divider"
                 app:layout_constraintBottom_toBottomOf="@id/text_body_game_difficulty"
                 app:layout_constraintEnd_toEndOf="@id/guideline_2_vertical"
@@ -127,8 +127,8 @@
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="@+id/game_timer_progress_bar"
                 app:layout_constraintEnd_toEndOf="@+id/game_timer_progress_bar"
-                app:layout_constraintStart_toStartOf="@+id/guideline_1_vertical"
-                app:layout_constraintTop_toTopOf="@+id/guideline_1_horizontal"
+                app:layout_constraintStart_toStartOf="@+id/game_timer_progress_bar"
+                app:layout_constraintTop_toTopOf="@+id/game_timer_progress_bar"
                 tools:text="ア" />
 
             <com.google.android.material.textview.MaterialTextView
