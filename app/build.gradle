@@ -12,8 +12,8 @@ android {
         applicationId "com.mathsemilio.katakanalearner"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 3
-        versionName "stable-0.0.3"
+        versionCode 4
+        versionName "stable-0.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,7 +66,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-beta01"
 
     /* LiveData */
-    implementation "androidx.lifecycle:lifecycle-livedata:2.3.0-beta01"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01"
 
     /* WorkManager */
     implementation "androidx.work:work-runtime-ktx:2.4.0"
