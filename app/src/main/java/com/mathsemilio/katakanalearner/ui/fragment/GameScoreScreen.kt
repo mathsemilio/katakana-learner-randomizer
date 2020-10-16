@@ -81,7 +81,6 @@ class GameScoreScreen : Fragment() {
                 findNavController().navigate(R.id.action_gameScoreScreen_to_gameWelcomeScreen)
             }
         }
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             onBackPressedCallback
@@ -153,6 +152,7 @@ class GameScoreScreen : Fragment() {
                         0,
                         1F
                     )
+
                 shareGameScore()
             }
         }
@@ -187,18 +187,21 @@ class GameScoreScreen : Fragment() {
             type = "text/plain"
         }
 
-        val shareIntent =
-            Intent.createChooser(sendIntent, getString(R.string.game_score_create_chooser_title))
-
-        startActivity(shareIntent)
+        startActivity(
+            Intent.createChooser(
+                sendIntent,
+                getString(R.string.game_score_create_chooser_title)
+            )
+        )
     }
 
     private fun handleNavigation() {
         when (userAction) {
             UserAction.GO_TO_MAIN_GAME_SCREEN -> {
                 findNavController().navigate(
-                    GameScoreScreenDirections
-                        .actionGameScoreScreenToMainGameScreen(gameDifficultyValue)
+                    GameScoreScreenDirections.actionGameScoreScreenToMainGameScreen(
+                        gameDifficultyValue
+                    )
                 )
             }
             UserAction.GO_TO_WELCOME_SCREEN -> {

@@ -93,11 +93,7 @@ class GameWelcomeScreen : Fragment() {
     }
 
     private fun loadAdAndStartGame(gameDifficultyValue: Int) {
-        if (interstitialAd.isLoaded) {
-            interstitialAd.show()
-        } else {
-            startGame(gameDifficultyValue)
-        }
+        if (interstitialAd.isLoaded) interstitialAd.show() else startGame(gameDifficultyValue)
     }
 
     private fun configureGameDifficultyOptions() {
@@ -172,7 +168,8 @@ class GameWelcomeScreen : Fragment() {
                             1F
                         )
 
-                    loadAdAndStartGame(GAME_DIFFICULTY_VALUE_BEGINNER)
+                    gameDifficultyValue = GAME_DIFFICULTY_VALUE_BEGINNER
+                    loadAdAndStartGame(gameDifficultyValue)
                 }
             }
             DEFAULT_DIFFICULTY_MEDIUM -> {
@@ -197,7 +194,8 @@ class GameWelcomeScreen : Fragment() {
                             1F
                         )
 
-                    loadAdAndStartGame(GAME_DIFFICULTY_VALUE_MEDIUM)
+                    gameDifficultyValue = GAME_DIFFICULTY_VALUE_MEDIUM
+                    loadAdAndStartGame(gameDifficultyValue)
                 }
             }
             DEFAULT_DIFFICULTY_HARD -> {
@@ -222,7 +220,8 @@ class GameWelcomeScreen : Fragment() {
                             1F
                         )
 
-                    loadAdAndStartGame(GAME_DIFFICULTY_VALUE_HARD)
+                    gameDifficultyValue = GAME_DIFFICULTY_VALUE_HARD
+                    loadAdAndStartGame(gameDifficultyValue)
                 }
             }
         }
