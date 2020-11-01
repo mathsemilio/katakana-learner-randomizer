@@ -17,7 +17,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     companion object {
         const val APP_THEME_DIALOG_TAG = "AppThemeDialog"
         const val TRAINING_NOTIFICATION_TAG = "TrainingNotification"
-        const val APP_BUILD_VERSION = "stable-0.0.5"
+        const val APP_BUILD_VERSION = "stable-0.0.6"
         const val NOTIFICATION_PREF_KEY = "notification"
         const val CLEAR_PERFECT_SCORES_PREF_KEY = "clearPerfectScores"
         const val APP_THEME_PREF_KEY = "appTheme"
@@ -215,7 +215,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             calendar.get(Calendar.MINUTE),
             android.text.format.DateFormat.is24HourFormat(requireContext())
         )
-
         timePickerDialog.setOnCancelListener { notificationPreference.isChecked = false }
 
         timePickerDialog.setCancelable(false)
