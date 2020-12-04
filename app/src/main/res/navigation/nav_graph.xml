@@ -7,14 +7,15 @@
 
     <fragment
         android:id="@+id/gameWelcomeScreen"
-        android:name="com.mathsemilio.katakanalearner.ui.fragment.GameWelcomeScreen"
+        android:name="com.mathsemilio.katakanalearner.ui.screens.welcome.GameWelcomeScreen"
         tools:layout="@layout/game_welcome_screen">
 
         <action
-            android:id="@+id/action_gameWelcomeScreen_to_mainGameScreen"
+            android:id="@+id/action_gameWelcomeScreen_to_gameMainScreen"
             app:destination="@id/mainGameScreen"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
 
@@ -30,19 +31,20 @@
 
     <fragment
         android:id="@+id/mainGameScreen"
-        android:name="com.mathsemilio.katakanalearner.ui.fragment.MainGameScreen"
+        android:name="com.mathsemilio.katakanalearner.ui.screens.main.MainGameScreen"
         tools:layout="@layout/main_game_screen">
 
         <action
-            android:id="@+id/action_mainGameScreen_to_gameScoreScreen"
+            android:id="@+id/action_gameMainScreen_to_gameScoreScreen"
             app:destination="@id/gameScoreScreen"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
 
         <action
-            android:id="@+id/action_mainGameScreen_to_gameWelcomeScreen"
+            android:id="@+id/action_gameMainScreen_to_gameWelcomeScreen"
             app:destination="@id/gameWelcomeScreen"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -52,7 +54,7 @@
             app:popUpTo="@id/gameWelcomeScreen" />
 
         <argument
-            android:name="game_difficulty_value"
+            android:name="difficulty_value"
             android:defaultValue="0"
             app:argType="integer" />
 
@@ -60,7 +62,7 @@
 
     <fragment
         android:id="@+id/gameScoreScreen"
-        android:name="com.mathsemilio.katakanalearner.ui.fragment.GameScoreScreen"
+        android:name="com.mathsemilio.katakanalearner.ui.screens.score.GameScoreScreen"
         tools:layout="@layout/game_score_screen">
 
         <action
@@ -85,12 +87,12 @@
             app:popUpToInclusive="true" />
 
         <argument
-            android:name="game_score"
+            android:name="score"
             android:defaultValue="0"
             app:argType="integer" />
 
         <argument
-            android:name="game_difficulty"
+            android:name="difficulty_value"
             android:defaultValue="0"
             app:argType="integer" />
 
@@ -98,7 +100,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.mathsemilio.katakanalearner.ui.fragment.SettingsFragment"
+        android:name="com.mathsemilio.katakanalearner.ui.screens.settings.SettingsFragment"
         android:label="@string/settings_toolbar_title">
 
         <action

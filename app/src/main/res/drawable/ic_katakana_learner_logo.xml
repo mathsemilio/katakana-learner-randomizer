@@ -1,0 +1,62 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="181.02856dp"
+    android:autoMirrored="true"
+    android:viewportWidth="210"
+    android:viewportHeight="297">
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m46.809,107.817 l-0.794,21.63q-0.992,11.113 -8.731,11.113l-7.541,-0.595 -0.794,-5.159 7.342,0.992q2.778,0 3.77,-1.786 1.191,-1.786 1.587,-8.334l0.198,-13.097 -13.891,-0.198q-1.786,19.248 -16.073,28.575L8.511,137.186Q21.607,129.05 22.996,112.381H10.098v-4.762l13.295,0.198 0.198,-9.128h4.762l-0.198,9.128z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m98.403,108.412q-3.572,13.295 -10.12,21.034 -6.548,7.739 -18.058,12.7l-2.778,-4.167q11.113,-4.762 17.661,-12.502 -6.152,-4.366 -12.105,-7.342l2.381,-3.969 12.502,7.144q2.183,-3.175 5.358,-12.105l-0.397,-0.397H76.575q-3.373,5.358 -13.097,14.287l-3.175,-3.373q11.708,-10.914 15.875,-21.63l4.564,1.984 -1.984,4.366h15.478l1.389,-0.794q3.572,2.778 3.572,3.175 0,0.992 -0.794,1.587z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m148.409,107.817 l-0.794,21.63q-0.992,11.113 -8.731,11.113l-7.541,-0.595 -0.794,-5.159 7.342,0.992q2.778,0 3.77,-1.786 1.191,-1.786 1.587,-8.334l0.198,-13.097 -13.891,-0.198q-1.786,19.248 -16.073,28.575l-3.373,-3.77q13.097,-8.136 14.486,-24.805H111.698v-4.762l13.295,0.198 0.198,-9.128h4.762l-0.198,9.128z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m202.384,114.365h-18.256q0,14.486 -3.77,19.248 -3.572,4.564 -13.891,7.739l-2.58,-4.564q9.525,-2.183 12.502,-5.953 3.175,-3.77 3.175,-11.906l-0.198,-4.564h-19.05v-4.564h18.852l-0.198,-10.517h4.762l0.198,10.517h18.455z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m13.075,165.041h5.011v32.817h18.033v4.217H13.075Z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m64.048,187.043v2.232L43.063,189.276q0.298,4.713 2.828,7.193 2.555,2.456 7.094,2.456 2.629,0 5.085,-0.645 2.48,-0.645 4.911,-1.935v4.316q-2.456,1.042 -5.035,1.587 -2.58,0.546 -5.234,0.546 -6.648,0 -10.542,-3.87 -3.87,-3.87 -3.87,-10.468 0,-6.821 3.671,-10.815 3.696,-4.018 9.947,-4.018 5.606,0 8.855,3.621 3.274,3.597 3.274,9.798zM59.484,185.704q-0.05,-3.746 -2.108,-5.978 -2.034,-2.232 -5.407,-2.232 -3.82,0 -6.127,2.158 -2.282,2.158 -2.629,6.077z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m84.165,188.11q-5.531,0 -7.665,1.265 -2.133,1.265 -2.133,4.316 0,2.431 1.587,3.87 1.612,1.414 4.366,1.414 3.795,0 6.077,-2.679 2.307,-2.704 2.307,-7.169v-1.017zM93.268,186.225v15.85L88.704,202.075v-4.217q-1.563,2.53 -3.894,3.746 -2.332,1.191 -5.705,1.191 -4.266,0 -6.796,-2.381 -2.505,-2.406 -2.505,-6.424 0,-4.688 3.125,-7.069 3.15,-2.381 9.376,-2.381h6.4v-0.446q0,-3.15 -2.084,-4.862 -2.059,-1.736 -5.804,-1.736 -2.381,0 -4.638,0.571 -2.257,0.571 -4.341,1.712v-4.217q2.505,-0.967 4.862,-1.439 2.356,-0.496 4.589,-0.496 6.028,0 9.004,3.125 2.977,3.125 2.977,9.475z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m118.767,178.56q-0.769,-0.446 -1.687,-0.645 -0.893,-0.223 -1.984,-0.223 -3.87,0 -5.953,2.53 -2.059,2.505 -2.059,7.218v14.635h-4.589v-27.781h4.589v4.316q1.439,-2.53 3.746,-3.746 2.307,-1.24 5.606,-1.24 0.471,0 1.042,0.074 0.571,0.05 1.265,0.174z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m145.755,185.307v16.768h-4.564v-16.619q0,-3.944 -1.538,-5.904 -1.538,-1.96 -4.614,-1.96 -3.696,0 -5.829,2.356 -2.133,2.356 -2.133,6.424v15.701h-4.589v-27.781h4.589v4.316q1.637,-2.505 3.845,-3.746 2.232,-1.24 5.135,-1.24 4.787,0 7.243,2.977 2.456,2.952 2.456,8.706z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m178.621,187.043v2.232h-20.985q0.298,4.713 2.828,7.193 2.555,2.456 7.094,2.456 2.629,0 5.085,-0.645 2.48,-0.645 4.911,-1.935v4.316q-2.456,1.042 -5.035,1.587 -2.58,0.546 -5.234,0.546 -6.648,0 -10.542,-3.87 -3.87,-3.87 -3.87,-10.468 0,-6.821 3.671,-10.815 3.696,-4.018 9.947,-4.018 5.606,0 8.855,3.621 3.274,3.597 3.274,9.798zM174.057,185.704q-0.05,-3.746 -2.108,-5.978 -2.034,-2.232 -5.407,-2.232 -3.82,0 -6.127,2.158 -2.282,2.158 -2.629,6.077z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+    <path
+        android:fillColor="@color/colorSplashScreenLogo"
+        android:pathData="m202.21,178.56q-0.769,-0.446 -1.687,-0.645 -0.893,-0.223 -1.984,-0.223 -3.87,0 -5.953,2.53 -2.059,2.505 -2.059,7.218v14.635h-4.589v-27.781h4.589v4.316q1.439,-2.53 3.746,-3.746 2.307,-1.24 5.606,-1.24 0.471,0 1.042,0.074 0.571,0.05 1.265,0.174z"
+        android:strokeWidth="0.264583"
+        android:strokeColor="@color/colorSplashScreenLogo" />
+</vector>

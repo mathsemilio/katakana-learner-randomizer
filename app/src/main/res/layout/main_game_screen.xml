@@ -6,8 +6,12 @@
     <data>
 
         <variable
+            name="mainGameScreen"
+            type="com.mathsemilio.katakanalearner.ui.screens.main.MainGameScreen" />
+
+        <variable
             name="mainGameViewModel"
-            type="com.mathsemilio.katakanalearner.ui.viewModel.MainGameViewModel" />
+            type="com.mathsemilio.katakanalearner.ui.screens.main.MainGameViewModel" />
     </data>
 
     <ScrollView
@@ -18,7 +22,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.fragment.MainGameScreen">
+            tools:context=".ui.screens.main.GameMainScreen">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_1_vertical"
@@ -61,7 +65,7 @@
                 android:layout_height="@dimen/game_progress_progress_bar_height"
                 android:indeterminateOnly="false"
                 android:max="48"
-                android:progress="@{mainGameViewModel.gameProgress}"
+                android:progress="@{mainGameViewModel.progress}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +92,7 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline_1_vertical"
                 app:layout_constraintTop_toTopOf="parent"
+                app:setGameDifficultyText="@{mainGameScreen.difficultyValue}"
                 tools:text="Medium" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -96,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_8dp"
-                android:text="@{@string/game_score(mainGameViewModel.gameScore)}"
+                android:text="@{@string/game_score(mainGameViewModel.score)}"
                 app:layout_constraintBottom_toTopOf="@id/guideline_1_horizontal"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_2_vertical"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -109,21 +114,21 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:indeterminateOnly="false"
-                android:max="@{mainGameViewModel.gameTimerProgressBarValue}"
-                android:progress="@{mainGameViewModel.currentGameTimeInt}"
+                android:progress="@{mainGameViewModel.currentTime}"
                 android:progressDrawable="@drawable/circle_progress_bar"
                 app:layout_constraintBottom_toTopOf="@id/guideline_2_horizontal"
                 app:layout_constraintEnd_toEndOf="@id/guideline_2_vertical"
                 app:layout_constraintStart_toStartOf="@id/guideline_1_vertical"
                 app:layout_constraintTop_toBottomOf="@id/guideline_1_horizontal"
+                app:setCountDownTimerProgressBarMax="@{mainGameScreen.difficultyValue}"
                 tools:progress="50" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/text_headline_current_katakana_letter"
+                android:id="@+id/text_headline_current_hiragana_letter"
                 style="@style/TextAppearance.MaterialComponents.Headline1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{mainGameViewModel.currentKatakanaLetterString}"
+                android:text="@{mainGameViewModel.currentKatakanaSymbol}"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="@+id/game_timer_progress_bar"
                 app:layout_constraintEnd_toEndOf="@+id/game_timer_progress_bar"
@@ -156,35 +161,36 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_button_option_1"
-                    style="@style/katakana_learner_chip_style"
+                    style="@style/Widget.Chip.Transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{mainGameViewModel.chip1StringRomanization}"
-                    tools:text="RA" />
+                    android:text="@{mainGameViewModel.chipButton1Romanization}"
+                    tools:text="CHI" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_button_option_2"
-                    style="@style/katakana_learner_chip_style"
+                    style="@style/Widget.Chip.Transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{mainGameViewModel.chip2StringRomanization}"
-                    tools:text="RI" />
+                    android:text="@{mainGameViewModel.chipButton2Romanization}"
+                    tools:checked="true"
+                    tools:text="A" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_button_option_3"
-                    style="@style/katakana_learner_chip_style"
+                    style="@style/Widget.Chip.Transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{mainGameViewModel.chip3StringRomanization}"
+                    android:text="@{mainGameViewModel.chipButton3Romanization}"
                     tools:text="RU" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_button_option_4"
-                    style="@style/katakana_learner_chip_style"
+                    style="@style/Widget.Chip.Transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{mainGameViewModel.chip4StringRomanization}"
-                    tools:text="RE" />
+                    android:text="@{mainGameViewModel.chipButton4Romanization}"
+                    tools:text="HO" />
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -193,25 +199,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_description_button_for_exiting_the_game"
+                android:onClick="@{() -> mainGameViewModel.exitGame()}"
                 android:src="@drawable/ic_baseline_exit_to_app_24"
                 app:backgroundTint="@color/colorPrimary"
-                app:layout_constraintEnd_toStartOf="@+id/fab_pause_timer"
+                app:layout_constraintEnd_toStartOf="@+id/fab_pause"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toEndOf="@id/guideline_1_vertical"
                 app:layout_constraintTop_toBottomOf="@id/guideline_3_horizontal"
-                app:tint="@color/fabIconColor" />
+                app:tint="@color/colorFabIconTint" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_pause_timer"
+                android:id="@+id/fab_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_description_button_for_pausing_game"
+                android:onClick="@{() -> mainGameViewModel.pauseGame()}"
                 android:src="@drawable/ic_baseline_pause_24"
                 app:backgroundTint="@color/colorPrimary"
                 app:layout_constraintEnd_toStartOf="@id/fab_check_answer"
                 app:layout_constraintStart_toEndOf="@id/fab_exit"
                 app:layout_constraintTop_toBottomOf="@id/guideline_3_horizontal"
-                app:tint="@color/fabIconColor" />
+                app:tint="@color/colorFabIconTint" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_check_answer"
@@ -219,12 +227,13 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_description_button_for_verifying_answer"
                 android:enabled="false"
+                android:onClick="@{() -> mainGameViewModel.checkAnswer(mainGameScreen.selectedRomanization)}"
                 android:src="@drawable/ic_check_circle_black_24dp"
                 app:backgroundTint="@color/fab_verify_answer_color_state_list"
                 app:layout_constraintEnd_toStartOf="@id/guideline_2_vertical"
-                app:layout_constraintStart_toEndOf="@id/fab_pause_timer"
+                app:layout_constraintStart_toEndOf="@id/fab_pause"
                 app:layout_constraintTop_toBottomOf="@id/guideline_3_horizontal"
-                app:tint="@color/fabIconColor"
+                app:tint="@color/colorFabIconTint"
                 tools:enabled="true" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

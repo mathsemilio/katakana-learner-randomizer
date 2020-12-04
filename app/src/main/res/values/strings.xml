@@ -6,7 +6,7 @@
     <string name="settings_toolbar_title">Settings</string>
 
     <!-- Settings fragment strings -->
-    <string name="preference_category_title_notification">Notification</string>
+    <string name="preference_category_title_notification">Training Reminder</string>
     <string name="preference_category_title_game_options">Game options</string>
     <string name="preference_category_title_game_sound">App sounds</string>
     <string name="preference_category_title_app_theme">App theme</string>
@@ -35,9 +35,9 @@
 
     <!-- Training Notifications strings -->
     <string name="training_notification_content_title">Time to train your Katakana!</string>
-    <string name="training_notification_content_text">Touch here to start training.</string>
-    <string name="training_notifications_channel_name">Katakana Learner training remainder</string>
-    <string name="training_notifications_channel_description">Katakana Training Remainder</string>
+    <string name="training_notification_content_text">Tap here to start training.</string>
+    <string name="training_notification_channel_name">Katakana Learner training remainder</string>
+    <string name="training_notification_channel_description">Katakana Training Remainder</string>
 
     <!-- Game Welcome Screen -->
     <string name="get_ready_to_associate">Get ready to associate…</string>
@@ -59,7 +59,6 @@
     <string name="game_score">Score: %d</string>
 
     <!-- Score screen strings -->
-    <string name="content_description_grade_star">Grade star</string>
     <string name="content_description_button_for_navigating_to_the_home_screen">Button for navigating to the home screen</string>
     <string name="content_description_button_for_playing_again">Button for playing the game again</string>
     <string name="content_description_button_for_sharing_score">Button for sharing the final score</string>
@@ -73,22 +72,23 @@
     <string name="app_theme_dialog_option_dark_theme">Dark theme</string>
     <string name="app_theme_dialog_option_light_theme">Light theme</string>
     <string name="app_theme_dialog_title">Select a option below:</string>
-    <string name="app_theme_dialog_negative_button_text">Cancel</string>
+
+    <!-- Alert Dialog Button Strings -->
+    <string name="alert_dialog_continue_button_text">Continue</string>
+    <string name="alert_dialog_cancel_button_text">Cancel</string>
+    <string name="alert_dialog_exit_button_text">Exit</string>
 
     <!-- Alert Dialog Correct answer strings -->
     <string name="alert_dialog_correct_answer_title">Correct Answer!</string>
     <string name="alert_dialog_correct_answer_message">Well Done! Keep practicing!</string>
-    <string name="alert_dialog_correct_answer_positive_button_text">Continue</string>
 
     <!-- Alert Dialog Incorrect answer strings -->
     <string name="alert_dialog_wrong_answer_title">Wrong Answer!</string>
     <string name="alert_dialog_wrong_answer_message">The correct rōmaji for that symbol was: \"%1$s\". Keep Practicing!</string>
-    <string name="alert_dialog_wrong_answer_positive_button_text">Continue</string>
 
     <!-- Alert Dialog Time's over strings -->
     <string name="alert_dialog_time_over_title">Time\'s over!</string>
     <string name="alert_dialog_time_over_message">The correct rōmaji for that symbol was: \"%1$s\". Keep Practicing!</string>
-    <string name="alert_dialog_time_over_positive_button_text">Continue</string>
 
     <!-- Alert Dialog Game Paused strings -->
     <string name="alert_dialog_game_paused_title">Game Paused</string>
@@ -98,21 +98,15 @@
     <!-- Alert Dialog Exit Game strings -->
     <string name="alert_dialog_exit_game_title">Exit game</string>
     <string name="alert_dialog_exit_game_message">Are you sure? Your progress will be lost!</string>
-    <string name="alert_dialog_exit_game_positive_button_text">Exit</string>
-    <string name="alert_dialog_exit_game_negative_button_text">Cancel</string>
+    <string name="alert_dialog_exit_game_positive_button_text">Stay in the Game</string>
 
-    <!-- Alert Dialog Exit Game strings -->
-    <string name="alert_dialog_on_back_pressed_title">Exit game</string>
-    <string name="alert_dialog_on_back_pressed_message">Are you sure? Your progress will be lost!</string>
-    <string name="alert_dialog_on_back_pressed_positive_button_text">Stay in the Game!</string>
-    <string name="alert_dialog_on_back_pressed_negative_button_text">Exit</string>
+    <!-- Share final score string -->
+    <string name="share_final_score">I got %d out of 48 symbols on the Katakana Learner Randomizer app. Can you beat my score?</string>
 
     <!-- Perfect Final score -->
-    <string name="final_perfect_score">I just got a perfect score on the Katakana Learner Randomizer App! Can you repeat my feat?</string>
+    <string name="share_perfect_final_score">I just got a perfect score on the Katakana Learner Randomizer App! Can you repeat my feat?</string>
 
     <!-- Intent Create Chooser title -->
     <string name="game_score_create_chooser_title">Share your game score!</string>
-
-    <string name="adUnitInterstitialId" translatable="false">ca-app-pub-5242007423595790/3550060758</string>
 
 </resources>
