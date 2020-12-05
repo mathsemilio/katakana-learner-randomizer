@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.InterstitialAd
@@ -23,11 +22,10 @@ import com.mathsemilio.katakanalearner.ui.commom.AlertUserHelper.onExitGame
 import com.mathsemilio.katakanalearner.ui.commom.AlertUserHelper.onGameIsPaused
 import com.mathsemilio.katakanalearner.ui.commom.AlertUserHelper.onTimeOver
 import com.mathsemilio.katakanalearner.ui.commom.AlertUserHelper.onWrongAnswer
+import com.mathsemilio.katakanalearner.ui.commom.BaseFragment
 import com.mathsemilio.katakanalearner.ui.commom.util.playSFX
-import com.mathsemilio.katakanalearner.ui.commom.util.setupAndLoadInterstitialAd
-import com.mathsemilio.katakanalearner.ui.commom.util.setupSoundPool
 
-class MainGameScreen : Fragment() {
+class MainGameScreen : BaseFragment() {
 
     private enum class FragmentState { RUNNING, PAUSED, DIALOG_BEING_SHOWN }
 
@@ -65,23 +63,7 @@ class MainGameScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
-            mainGameScreen = this@MainGameScreen
-            mainGameViewModel = viewModel
-            lifecycleOwner = this@MainGameScreen
-        }
-
-        interstitialAd = setupAndLoadInterstitialAd("ca-app-pub-3940256099942544/1033173712") {
-            navigateToScoreScreen()
-        }
-
-        preferencesRepository = PreferencesRepository(requireContext())
-
-        soundPool = setupSoundPool(maxAudioStreams = 2)
-
-        soundEffectsVolume = preferencesRepository.getSoundEffectsVolume()
-
-        difficultyValue = MainGameScreenArgs.fromBundle(requireArguments()).difficultyValue
+        initialize()
 
         attachListeners()
 
@@ -90,6 +72,25 @@ class MainGameScreen : Fragment() {
         startGame()
 
         observeGameEvents()
+    }
+
+    private fun initialize() {
+        binding.apply {
+            mainGameScreen = this@MainGameScreen
+            mainGameViewModel = viewModel
+            lifecycleOwner = this@MainGameScreen
+        }
+
+        interstitialAd =
+            getCompositionRoot().getInterstitialAd(requireContext()) { navigateToScoreScreen() }
+
+        preferencesRepository = getCompositionRoot().getPreferencesRepository(requireContext())
+
+        soundPool = getCompositionRoot().getSoundPool(maxAudioStreams = 2)
+
+        soundEffectsVolume = preferencesRepository.getSoundEffectsVolume()
+
+        // difficultyValue = MainGameScreenArgs.fromBundle(requireArguments()).difficultyValue
     }
 
     private fun attachListeners() {
@@ -203,11 +204,11 @@ class MainGameScreen : Fragment() {
             if (score == PERFECT_SCORE)
                 preferencesRepository.incrementPerfectScoresValue()
 
-            findNavController().navigate(
-                MainGameScreenDirections.actionGameMainScreenToGameScoreScreen(
-                    score, difficultyValue
-                )
-            )
+//            findNavController().navigate(
+//                MainGameScreenDirections.actionGameMainScreenToGameScoreScreen(
+//                    score, difficultyValue
+//                )
+//            )
         }
     }
 

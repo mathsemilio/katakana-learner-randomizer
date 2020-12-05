@@ -20,10 +20,10 @@
         tools:targetApi="n">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5242007423595790~7375477899" />
+            android:value="ca-app-pub-5242007423595790~9952474119" />
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

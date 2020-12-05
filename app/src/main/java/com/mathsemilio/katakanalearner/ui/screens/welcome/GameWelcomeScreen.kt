@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.chip.Chip
@@ -14,11 +13,10 @@ import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.commom.*
 import com.mathsemilio.katakanalearner.data.preferences.repository.PreferencesRepository
 import com.mathsemilio.katakanalearner.databinding.GameWelcomeScreenBinding
+import com.mathsemilio.katakanalearner.ui.commom.BaseFragment
 import com.mathsemilio.katakanalearner.ui.commom.util.playSFX
-import com.mathsemilio.katakanalearner.ui.commom.util.setupAndLoadInterstitialAd
-import com.mathsemilio.katakanalearner.ui.commom.util.setupSoundPool
 
-class GameWelcomeScreen : Fragment() {
+class GameWelcomeScreen : BaseFragment() {
 
     private var _binding: GameWelcomeScreenBinding? = null
     private val binding get() = _binding!!
@@ -48,16 +46,20 @@ class GameWelcomeScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initialize()
+
+        loadSoundEffects()
+    }
+
+    private fun initialize() {
         binding.gameWelcomeScreen = this
 
         interstitialAd =
-            setupAndLoadInterstitialAd("ca-app-pub-3940256099942544/1033173712") {
-                navigateToMainScreen()
-            }
+            getCompositionRoot().getInterstitialAd(requireContext()) { navigateToMainScreen() }
 
-        preferencesRepository = PreferencesRepository(requireContext())
+        preferencesRepository = getCompositionRoot().getPreferencesRepository(requireContext())
 
-        soundPool = setupSoundPool(maxAudioStreams = 1)
+        soundPool = getCompositionRoot().getSoundPool(maxAudioStreams = 1)
 
         soundEffectsVolume = preferencesRepository.getSoundEffectsVolume()
 
@@ -75,8 +77,6 @@ class GameWelcomeScreen : Fragment() {
                 DEFAULT_DIFFICULTY_HARD -> difficultyValue = GAME_DIFFICULTY_VALUE_HARD
             }
         }
-
-        loadSoundEffects()
     }
 
     private fun loadSoundEffects() {
@@ -119,9 +119,9 @@ class GameWelcomeScreen : Fragment() {
     }
 
     private fun navigateToMainScreen() {
-        findNavController().navigate(
-            GameWelcomeScreenDirections.actionGameWelcomeScreenToGameMainScreen(difficultyValue)
-        )
+//        findNavController().navigate(
+//            GameWelcomeScreenDirections.actionGameWelcomeScreenToGameMainScreen(difficultyValue)
+//        )
     }
 
     override fun onDestroyView() {

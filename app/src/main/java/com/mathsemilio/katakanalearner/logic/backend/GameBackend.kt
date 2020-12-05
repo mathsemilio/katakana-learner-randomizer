@@ -12,7 +12,7 @@ class GameBackend : IObserverContract {
     private lateinit var countDownTimer: CountDownTimer
 
     private val backendObservers = mutableListOf<IBackendObserver>()
-    private val hiraganaSymbolList = katakanaSymbolsList.toMutableList()
+    private val katakanaSymbolList = katakanaSymbolsList.toMutableList()
 
     private var difficultyCountDownTime = 0L
     private var currentCountDownTime = 0L
@@ -42,9 +42,9 @@ class GameBackend : IObserverContract {
             else -> throw IllegalArgumentException(INVALID_GAME_DIFFICULTY_VALUE_EXCEPTION)
         }
 
-        hiraganaSymbolList.shuffle()
+        katakanaSymbolList.shuffle()
 
-        notifyObserver(BackendEvent.NewSymbol(hiraganaSymbolList.first()))
+        notifyObserver(BackendEvent.NewSymbol(katakanaSymbolList.first()))
         generateRomanizationGroup()
         startTimer(difficultyCountDownTime)
     }
@@ -72,7 +72,7 @@ class GameBackend : IObserverContract {
     private fun checkAnswer(selectedRomanization: String) {
         cancelTimer()
 
-        if (hiraganaSymbolList.first().romanization == selectedRomanization) {
+        if (katakanaSymbolList.first().romanization == selectedRomanization) {
             notifyObserver(BackendEvent.GameScoreUpdated(++score))
             notifyObserver(BackendEvent.CorrectAnswer)
         } else {
@@ -83,11 +83,11 @@ class GameBackend : IObserverContract {
     private fun getNextSymbol() {
         notifyObserver(BackendEvent.GameProgressUpdated(++progress))
 
-        hiraganaSymbolList.removeAt(0)
+        katakanaSymbolList.removeAt(0)
 
-        notifyObserver(BackendEvent.NewSymbol(hiraganaSymbolList.first()))
+        notifyObserver(BackendEvent.NewSymbol(katakanaSymbolList.first()))
 
-        if (hiraganaSymbolList.size == 1) {
+        if (katakanaSymbolList.size == 1) {
             generateRomanizationGroup()
             startTimer(difficultyCountDownTime)
             notifyObserver(BackendEvent.GameFinished)
@@ -105,7 +105,7 @@ class GameBackend : IObserverContract {
             "WA", "WI", "WE", "WO", "N"
         ).let { romanizationList ->
             romanizationList.shuffle()
-            romanizationList.filterNot { it == hiraganaSymbolList.first().romanization }
+            romanizationList.filterNot { it == katakanaSymbolList.first().romanization }
         }
 
         firstRomanizationGroupString = romanizationList.slice(0..11).random()
@@ -129,10 +129,10 @@ class GameBackend : IObserverContract {
 
     private fun setCorrectRomanizationAnswer() {
         when (Random.nextInt(4)) {
-            0 -> firstRomanizationGroupString = hiraganaSymbolList.first().romanization
-            1 -> secondRomanizationGroupString = hiraganaSymbolList.first().romanization
-            2 -> thirdRomanizationGroupString = hiraganaSymbolList.first().romanization
-            3 -> fourthRomanizationGroupString = hiraganaSymbolList.first().romanization
+            0 -> firstRomanizationGroupString = katakanaSymbolList.first().romanization
+            1 -> secondRomanizationGroupString = katakanaSymbolList.first().romanization
+            2 -> thirdRomanizationGroupString = katakanaSymbolList.first().romanization
+            3 -> fourthRomanizationGroupString = katakanaSymbolList.first().romanization
         }
     }
 
@@ -146,7 +146,6 @@ class GameBackend : IObserverContract {
             backendObservers.remove(IBackendObserver)
     }
 
-    override fun notifyObserver(event: BackendEvent) {
+    override fun notifyObserver(event: BackendEvent) =
         backendObservers.forEach { it.onBackendEvent(event) }
-    }
 }

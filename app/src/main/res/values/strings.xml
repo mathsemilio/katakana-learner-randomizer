@@ -109,4 +109,6 @@
     <!-- Intent Create Chooser title -->
     <string name="game_score_create_chooser_title">Share your game score!</string>
 
+    <string name="interstitialAdUnitId" translatable="false">ca-app-pub-5242007423595790/3550060758</string>
+
 </resources>

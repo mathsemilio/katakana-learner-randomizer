@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -17,11 +16,10 @@ import com.mathsemilio.katakanalearner.commom.PERFECT_SCORE
 import com.mathsemilio.katakanalearner.commom.PRIORITY_LOW
 import com.mathsemilio.katakanalearner.data.preferences.repository.PreferencesRepository
 import com.mathsemilio.katakanalearner.databinding.GameScoreScreenBinding
+import com.mathsemilio.katakanalearner.ui.commom.BaseFragment
 import com.mathsemilio.katakanalearner.ui.commom.util.playSFX
-import com.mathsemilio.katakanalearner.ui.commom.util.setupAndLoadInterstitialAd
-import com.mathsemilio.katakanalearner.ui.commom.util.setupSoundPool
 
-class GameScoreScreen : Fragment() {
+class GameScoreScreen : BaseFragment() {
 
     private enum class UserAction { GO_TO_MAIN_GAME_SCREEN, GO_TO_WELCOME_SCREEN }
 
@@ -55,28 +53,31 @@ class GameScoreScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.gameScoreScreen = this
-
-        preferencesRepository = PreferencesRepository(requireContext())
-
-        interstitialAd = setupAndLoadInterstitialAd("ca-app-pub-3940256099942544/1033173712") {
-            handleNavigation()
-        }
-
-        soundPool = setupSoundPool(maxAudioStreams = 1)
-
-        GameScoreScreenArgs.fromBundle(requireArguments()).let { args ->
-            score = args.score
-            difficultyValue = args.difficultyValue
-        }
-
-        perfectScores = preferencesRepository.getPerfectScoresValue()
+        initialize()
 
         setupOnBackPressedCallback()
 
         loadAdBanner()
 
         loadSoundEffects()
+    }
+
+    private fun initialize() {
+        binding.gameScoreScreen = this
+
+        interstitialAd =
+            getCompositionRoot().getInterstitialAd(requireContext()) { handleNavigation() }
+
+        preferencesRepository = getCompositionRoot().getPreferencesRepository(requireContext())
+
+        soundPool = getCompositionRoot().getSoundPool(maxAudioStreams = 1)
+
+//        GameScoreScreenArgs.fromBundle(requireArguments()).let { args ->
+//            score = args.score
+//            difficultyValue = args.difficultyValue
+//        }
+
+        perfectScores = preferencesRepository.getPerfectScoresValue()
     }
 
     private fun setupOnBackPressedCallback() {
@@ -144,12 +145,13 @@ class GameScoreScreen : Fragment() {
 
     private fun handleNavigation() {
         when (userAction) {
-            UserAction.GO_TO_MAIN_GAME_SCREEN ->
-                findNavController().navigate(
-                    GameScoreScreenDirections.actionGameScoreScreenToMainGameScreen(
-                        difficultyValue
-                    )
-                )
+            UserAction.GO_TO_MAIN_GAME_SCREEN -> {
+//                findNavController().navigate(
+//                    GameScoreScreenDirections.actionGameScoreScreenToMainGameScreen(
+//                        difficultyValue
+//                    )
+//                )
+            }
             UserAction.GO_TO_WELCOME_SCREEN ->
                 findNavController().navigate(R.id.action_gameScoreScreen_to_gameWelcomeScreen)
         }
