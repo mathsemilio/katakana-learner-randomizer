@@ -51,4 +51,4 @@ const val INVALID_APP_THEME_VALUE_EXCEPTION = "Invalid app theme value"
 const val INVALID_GAME_DIFFICULTY_VALUE_EXCEPTION = "Invalid game difficulty value"
 const val NULL_ACTIVITY_EXCEPTION = "Activity cannot be null"
 
-const val APP_BUILD_VERSION = "stable-0.0.6"
+const val APP_BUILD_VERSION = "stable-0.1.0"

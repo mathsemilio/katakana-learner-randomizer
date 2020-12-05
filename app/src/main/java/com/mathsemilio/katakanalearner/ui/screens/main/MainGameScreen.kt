@@ -71,7 +71,7 @@ class MainGameScreen : Fragment() {
             lifecycleOwner = this@MainGameScreen
         }
 
-        interstitialAd = setupAndLoadInterstitialAd("ca-app-pub-3940256099942544/1033173712") {
+        interstitialAd = setupAndLoadInterstitialAd(getString(R.string.interstitialAdUnitId)) {
             navigateToScoreScreen()
         }
 

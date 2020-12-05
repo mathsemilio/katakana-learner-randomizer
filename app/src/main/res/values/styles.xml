@@ -8,7 +8,7 @@
 
     <style name="Theme.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
-        <item name="android:statusBarColor">@color/colorSplashScreenBackground</item>
+        <item name="android:statusBarColor">@color/colorSplashScreenStatusBar</item>
     </style>
 
     <style name="Widget.Chip.Transparent" parent="Widget.MaterialComponents.Chip.Action">
