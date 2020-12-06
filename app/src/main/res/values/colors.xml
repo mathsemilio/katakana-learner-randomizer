@@ -3,6 +3,6 @@
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorFabIconTint">@android:color/white</color>
-    <color name="colorSplashScreenBackground">@android:color/white</color>
+    <color name="colorSplashScreenStatusBar">@color/colorPrimary</color>
     <color name="colorSplashScreenLogo">@android:color/black</color>
 </resources>
