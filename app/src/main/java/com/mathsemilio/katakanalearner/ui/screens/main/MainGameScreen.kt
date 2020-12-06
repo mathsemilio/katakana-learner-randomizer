@@ -90,7 +90,7 @@ class MainGameScreen : BaseFragment() {
 
         soundEffectsVolume = preferencesRepository.getSoundEffectsVolume()
 
-        // difficultyValue = MainGameScreenArgs.fromBundle(requireArguments()).difficultyValue
+        difficultyValue = MainGameScreenArgs.fromBundle(requireArguments()).difficultyValue
     }
 
     private fun attachListeners() {
@@ -204,11 +204,11 @@ class MainGameScreen : BaseFragment() {
             if (score == PERFECT_SCORE)
                 preferencesRepository.incrementPerfectScoresValue()
 
-//            findNavController().navigate(
-//                MainGameScreenDirections.actionGameMainScreenToGameScoreScreen(
-//                    score, difficultyValue
-//                )
-//            )
+            findNavController().navigate(
+                MainGameScreenDirections.actionGameMainScreenToGameScoreScreen(
+                    score, difficultyValue
+                )
+            )
         }
     }
 

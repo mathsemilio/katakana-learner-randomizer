@@ -72,10 +72,10 @@ class GameScoreScreen : BaseFragment() {
 
         soundPool = getCompositionRoot().getSoundPool(maxAudioStreams = 1)
 
-//        GameScoreScreenArgs.fromBundle(requireArguments()).let { args ->
-//            score = args.score
-//            difficultyValue = args.difficultyValue
-//        }
+        GameScoreScreenArgs.fromBundle(requireArguments()).let { args ->
+            score = args.score
+            difficultyValue = args.difficultyValue
+        }
 
         perfectScores = preferencesRepository.getPerfectScoresValue()
     }
@@ -145,13 +145,12 @@ class GameScoreScreen : BaseFragment() {
 
     private fun handleNavigation() {
         when (userAction) {
-            UserAction.GO_TO_MAIN_GAME_SCREEN -> {
-//                findNavController().navigate(
-//                    GameScoreScreenDirections.actionGameScoreScreenToMainGameScreen(
-//                        difficultyValue
-//                    )
-//                )
-            }
+            UserAction.GO_TO_MAIN_GAME_SCREEN ->
+                findNavController().navigate(
+                    GameScoreScreenDirections.actionGameScoreScreenToMainGameScreen(
+                        difficultyValue
+                    )
+                )
             UserAction.GO_TO_WELCOME_SCREEN ->
                 findNavController().navigate(R.id.action_gameScoreScreen_to_gameWelcomeScreen)
         }

@@ -119,9 +119,9 @@ class GameWelcomeScreen : BaseFragment() {
     }
 
     private fun navigateToMainScreen() {
-//        findNavController().navigate(
-//            GameWelcomeScreenDirections.actionGameWelcomeScreenToGameMainScreen(difficultyValue)
-//        )
+        findNavController().navigate(
+            GameWelcomeScreenDirections.actionGameWelcomeScreenToGameMainScreen(difficultyValue)
+        )
     }
 
     override fun onDestroyView() {
