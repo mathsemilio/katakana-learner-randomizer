@@ -4,26 +4,31 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
 import androidx.preference.*
+import com.mathsemilio.katakanalearner.BuildConfig
 import com.mathsemilio.katakanalearner.R
 import com.mathsemilio.katakanalearner.commom.*
 import com.mathsemilio.katakanalearner.data.preferences.repository.PreferencesRepository
 import com.mathsemilio.katakanalearner.others.*
-import com.mathsemilio.katakanalearner.ui.commom.AlertUserHelper.onClearPerfectScoresPreference
-import com.mathsemilio.katakanalearner.ui.commom.util.buildTimePickerDialog
-import com.mathsemilio.katakanalearner.ui.commom.util.formatLongTime
-import com.mathsemilio.katakanalearner.ui.commom.util.showLongToast
-import com.mathsemilio.katakanalearner.ui.commom.util.showShortToast
-import com.mathsemilio.katakanalearner.ui.dialog.AppThemeDialogFragment
+import com.mathsemilio.katakanalearner.ui.others.DialogHelper
+import com.mathsemilio.katakanalearner.ui.others.MessagesHelper
+import com.mathsemilio.katakanalearner.ui.others.ToolbarVisibilityHelper
 import java.util.*
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsScreen : BasePreferenceFragment() {
 
-    private lateinit var calendar: Calendar
-    private lateinit var preferencesRepository: PreferencesRepository
-    private lateinit var timePickerDialog: TimePickerDialog
-    private lateinit var trainingNotificationSwitchPreference: SwitchPreferenceCompat
-    private lateinit var gameDefaultDifficultyOptionsPreference: ListPreference
-    private lateinit var clearPerfectScoresPreference: Preference
+    private lateinit var mCalendar: Calendar
+
+    private lateinit var mTimePickerDialog: TimePickerDialog
+
+    private lateinit var mTrainingNotificationHelper: TrainingNotificationHelper
+    private lateinit var mToolbarVisibilityHelper: ToolbarVisibilityHelper
+    private lateinit var mPreferencesRepository: PreferencesRepository
+    private lateinit var mMessagesHelper: MessagesHelper
+    private lateinit var mDialogHelper: DialogHelper
+
+    private lateinit var mTrainingNotificationSwitchPreference: SwitchPreferenceCompat
+    private lateinit var mGameDefaultDifficultyOptionsPreference: ListPreference
+    private lateinit var mClearPerfectScoresPreference: Preference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.app_settings, rootKey)
@@ -46,33 +51,40 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun initializeObjects() {
-        preferencesRepository = PreferencesRepository(requireContext())
+        mTrainingNotificationHelper = getCompositionRoot().getTrainingNotificationHelper()
 
-        trainingNotificationSwitchPreference =
+        mToolbarVisibilityHelper = getCompositionRoot().getToolbarVisibilityHelper()
+
+        mPreferencesRepository = getCompositionRoot().getPreferencesRepository()
+
+        mDialogHelper = getCompositionRoot().getDialogHelper()
+
+        mMessagesHelper = getCompositionRoot().getMessagesHelper()
+
+        mTrainingNotificationSwitchPreference =
             findPreference(TRAINING_NOTIFICATION_PREFERENCE_KEY)!!
 
-        gameDefaultDifficultyOptionsPreference =
+        mGameDefaultDifficultyOptionsPreference =
             findPreference(DEFAULT_GAME_DIFFICULTY_PREFERENCE_KEY)!!
 
-        clearPerfectScoresPreference =
-            findPreference(CLEAR_PERFECT_SCORES_PREFERENCE_KEY)!!
+        mClearPerfectScoresPreference = findPreference(CLEAR_PERFECT_SCORES_PREFERENCE_KEY)!!
     }
 
     private fun setupTrainingNotificationBasedOnPreferenceValue() {
-        when (preferencesRepository.getNotificationSwitchState()) {
+        when (mPreferencesRepository.getTrainingNotificationSwitchState()) {
             true -> {
-                trainingNotificationSwitchPreference.apply {
+                mTrainingNotificationSwitchPreference.apply {
                     isChecked = true
                     title = getString(R.string.preference_title_training_notification_checked)
                     summaryOn = getString(
                         R.string.preference_summary_on_training_notification,
-                        preferencesRepository.getNotificationTimeConfigured()
+                        mPreferencesRepository.getTrainingNotificationTimeConfigured()
                             .formatLongTime(requireContext())
                     )
                 }
             }
             false -> {
-                trainingNotificationSwitchPreference.apply {
+                mTrainingNotificationSwitchPreference.apply {
                     isChecked = false
                     title = getString(R.string.preference_title_training_notification_unchecked)
                 }
@@ -81,121 +93,113 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun setupDefaultGameDifficultyPreference() {
-        gameDefaultDifficultyOptionsPreference.setSummaryProvider {
-            return@setSummaryProvider when (preferencesRepository.getGameDefaultOption()) {
+        mGameDefaultDifficultyOptionsPreference.setSummaryProvider {
+            return@setSummaryProvider when (mPreferencesRepository.getGameDefaultOption()) {
                 "0" -> getString(R.string.difficulty_entry_default)
                 "1" -> getString(R.string.game_difficulty_beginner)
                 "2" -> getString(R.string.game_difficulty_medium)
                 "3" -> getString(R.string.game_difficulty_hard)
-                else -> throw IllegalArgumentException(INVALID_DEFAULT_GAME_OPTION_EXCEPTION)
+                else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DIFFICULTY_VALUE)
             }
         }
     }
 
     private fun setupClearPerfectScoresPreference() {
-        if (preferencesRepository.getPerfectScoresValue() == 0)
-            clearPerfectScoresPreference.isVisible = false
-        else
-            clearPerfectScoresPreference.setSummaryProvider {
-                return@setSummaryProvider getString(
-                    R.string.preference_summary_clear_perfect_scores,
-                    preferencesRepository.getPerfectScoresValue()
-                )
-            }
+        PreferencesRepository(requireContext()).getPerfectScoresValue().also { perfectScores ->
+            if (perfectScores == 0)
+                mClearPerfectScoresPreference.isVisible = false
+            else
+                mClearPerfectScoresPreference.setSummaryProvider {
+                    return@setSummaryProvider getString(
+                        R.string.preference_summary_clear_perfect_scores, perfectScores
+                    )
+                }
+        }
     }
 
     private fun setupAppThemePreference() {
         findPreference<Preference>(APP_THEME_PREFERENCE_KEY)?.setSummaryProvider {
-            return@setSummaryProvider when (preferencesRepository.getAppThemeValue()) {
+            return@setSummaryProvider when (mPreferencesRepository.getAppThemeValue()) {
                 APP_THEME_LIGHT_THEME -> getString(R.string.app_theme_dialog_option_light_theme)
                 APP_THEME_DARK_THEME -> getString(R.string.app_theme_dialog_option_dark_theme)
                 APP_THEME_FOLLOW_SYSTEM -> getString(R.string.app_theme_dialog_option_follow_system)
-                else -> throw IllegalArgumentException(INVALID_APP_THEME_VALUE_EXCEPTION)
+                else -> throw IllegalArgumentException(ILLEGAL_APP_THEME_VALUE)
             }
         }
     }
 
     private fun setupAppBuildVersionPreference() {
-        findPreference<Preference>(APP_BUILD_PREFERENCE_KEY)?.summary = APP_BUILD_VERSION
+        findPreference<Preference>(APP_BUILD_PREFERENCE_KEY)?.summary = BuildConfig.VERSION_NAME
     }
 
-    private fun showClearPerfectScoresDialog() {
-        onClearPerfectScoresPreference {
-            preferencesRepository.clearPerfectScoresValue()
+    private fun showClearPerfectScoresDialog() =
+        mDialogHelper.showClearPerfectScoresDialog {
+            mPreferencesRepository.clearPerfectScoresValue()
             findPreference<Preference>(CLEAR_PERFECT_SCORES_PREFERENCE_KEY)?.isVisible = false
         }
-    }
 
-    private fun handleOnTrainingNotificationPreferenceClick() {
-        when (trainingNotificationSwitchPreference.isChecked) {
+    private fun handleOnTrainingNotificationPreferenceClick() =
+        when (mTrainingNotificationSwitchPreference.isChecked) {
             true -> showTimePickerDialog()
             false -> {
-                trainingNotificationSwitchPreference.title =
+                mTrainingNotificationSwitchPreference.title =
                     getString(R.string.preference_title_training_notification_unchecked)
 
-                preferencesRepository.saveNotificationSwitchState(switchState = false)
+                mPreferencesRepository.setTrainingNotificationSwitchState(false)
 
-                TrainingNotificationHelper.cancelNotification(requireContext())
+                mTrainingNotificationHelper.cancelNotification()
             }
         }
-    }
 
     private fun showTimePickerDialog() {
-        calendar = Calendar.getInstance()
-
-        timePickerDialog = buildTimePickerDialog(
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE),
-            is24HourView = android.text.format.DateFormat.is24HourFormat(requireContext()),
-            { hourSetByUser, minuteSetByUser ->
-                handleOnTimeSetByUser(hourSetByUser, minuteSetByUser)
-            },
-            { trainingNotificationSwitchPreference.isChecked = false }
-        )
-
-        timePickerDialog.show()
+        mCalendar = Calendar.getInstance()
+        mDialogHelper.showTimePickerDialog(
+            mCalendar,
+            { hourSet, minuteSet -> handleTimeSetByUserEvent(hourSet, minuteSet) },
+            { mTrainingNotificationSwitchPreference.isChecked = false }
+        ).also { it.show() }
     }
 
-    private fun handleOnTimeSetByUser(hourSetByUser: Int, minuteSetByUser: Int) {
-        val timeSetByUser = calendar.apply {
+    private fun handleTimeSetByUserEvent(hourSetByUser: Int, minuteSetByUser: Int) {
+        val timeSetByUser = mCalendar.apply {
             set(Calendar.HOUR_OF_DAY, hourSetByUser)
             set(Calendar.MINUTE, minuteSetByUser)
         }
 
-        if (timeSetByUser.timeInMillis > System.currentTimeMillis()) {
-            TrainingNotificationHelper.scheduleNotification(
-                requireContext(),
-                timeSetByUser.timeInMillis - System.currentTimeMillis()
+        if (timeSetByUser.timeInMillis > System.currentTimeMillis())
+            scheduleTrainingReminder(timeSetByUser.timeInMillis)
+        else
+            scheduleTrainingReminderFailed()
+    }
+
+    private fun scheduleTrainingReminder(timeSetByUser: Long) {
+        mTrainingNotificationHelper.scheduleNotification(timeSetByUser - System.currentTimeMillis())
+
+        mTrainingNotificationSwitchPreference.apply {
+            title = getString(R.string.preference_title_training_notification_checked)
+            summaryOn = getString(
+                R.string.preference_summary_on_training_notification,
+                timeSetByUser.formatLongTime(requireContext())
             )
-
-            trainingNotificationSwitchPreference.apply {
-                title = getString(R.string.preference_title_training_notification_checked)
-                summaryOn = getString(
-                    R.string.preference_summary_on_training_notification,
-                    timeSetByUser.timeInMillis.formatLongTime(requireContext())
-                )
-            }
-
-            preferencesRepository.apply {
-                saveNotificationTimeConfigured(timeSetByUser.timeInMillis)
-                saveNotificationSwitchState(switchState = true)
-            }
-
-            showShortToast(getString(R.string.preference_notification_set_toast_message))
-        } else {
-            timePickerDialog.cancel()
-
-            trainingNotificationSwitchPreference.isChecked = false
-
-            preferencesRepository.saveNotificationSwitchState(switchState = false)
-
-            showLongToast(getString(R.string.preference_notification_time_in_future_toast_message))
         }
+
+        mPreferencesRepository.apply {
+            setTrainingNotificationSwitchState(true)
+            setTrainingNotificationTimeConfigured(timeSetByUser)
+        }
+
+        mMessagesHelper.showTrainingReminderSetSuccessfullyMessage()
+    }
+
+    private fun scheduleTrainingReminderFailed() {
+        mTimePickerDialog.cancel()
+        mTrainingNotificationSwitchPreference.isChecked = false
+        mPreferencesRepository.setTrainingNotificationSwitchState(false)
+        mMessagesHelper.showTrainingReminderSetFailedMessage()
     }
 
     private fun showAppThemeDialog() {
-        val appThemeDialog = AppThemeDialogFragment()
-        appThemeDialog.show(parentFragmentManager, null)
+        mDialogHelper.showAppThemeDialog()
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
@@ -205,5 +209,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
             APP_THEME_PREFERENCE_KEY -> showAppThemeDialog()
         }
         return super.onPreferenceTreeClick(preference)
+    }
+
+    override fun onResume() {
+        mToolbarVisibilityHelper.setToolbarVisibility(isVisible = true)
+        super.onResume()
+    }
+
+    override fun onStop() {
+        mToolbarVisibilityHelper.setToolbarVisibility(isVisible = false)
+        super.onStop()
     }
 }

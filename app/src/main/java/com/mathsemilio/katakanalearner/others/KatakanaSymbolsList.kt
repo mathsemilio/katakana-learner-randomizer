@@ -1,8 +1,7 @@
 package com.mathsemilio.katakanalearner.others
 
-import com.mathsemilio.katakanalearner.data.model.KatakanaSymbol
+import com.mathsemilio.katakanalearner.domain.katakana.KatakanaSymbol
 
-// List of Katakana Symbols and their associated Hepburn romanization
 val katakanaSymbolsList: List<KatakanaSymbol> = listOf(
     KatakanaSymbol(symbol = "ア", romanization = "A"),
     KatakanaSymbol(symbol = "イ", romanization = "I"),
@@ -57,8 +56,6 @@ val katakanaSymbolsList: List<KatakanaSymbol> = listOf(
     KatakanaSymbol(symbol = "ロ", romanization = "RO"),
 
     KatakanaSymbol(symbol = "ワ", romanization = "WA"),
-    KatakanaSymbol(symbol = "ヰ", romanization = "WI"),
-    KatakanaSymbol(symbol = "ヱ", romanization = "WE"),
     KatakanaSymbol(symbol = "ヲ", romanization = "WO"),
 
     KatakanaSymbol(symbol = "ン", romanization = "N")
