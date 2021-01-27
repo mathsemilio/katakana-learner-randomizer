@@ -9,7 +9,7 @@ and their Hepburn romanizations.
 [Wikipedia - Katakana](https://en.wikipedia.org/wiki/Katakana)
 
 ### How it works?
-Before the game starts, the user selects a difficulty for the game (which can also be selected on the Settings screen). The app's algorithm then generates a random order of all the 48 Katakana symbols. The objective of the user is to select a romanization for the symbol currently being displayed on the screen before the time's run out. The amount of time available for the user depends on the difficulty he selected on the start screen. Once the user goes through all the letters, he will be directed to a result screen, where the final score is presented along with the option to play the game again or share his score.
+Before the game starts, the user selects a difficulty for the game (which can also be selected on the Settings screen). The app's algorithm then generates a random order of all the 46 Katakana symbols. The objective of the user is to select a romanization for the symbol currently being displayed on the screen before the time's run out. The amount of time available for the user depends on the difficulty he selected on the start screen. Once the user goes through all the letters, he will be directed to a result screen, where the final score is presented along with the option to play the game again or share his score.
 
 **NOTE:** <i>This application shares the same code base from </i>
 [Hiragana Learner Randomizer Game](https://github.com/mathsemilio/hiragana-learner-randomizer).
