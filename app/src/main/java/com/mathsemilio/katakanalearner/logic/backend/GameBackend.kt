@@ -2,98 +2,88 @@ package com.mathsemilio.katakanalearner.logic.backend
 
 import android.os.CountDownTimer
 import com.mathsemilio.katakanalearner.commom.*
-import com.mathsemilio.katakanalearner.logic.event.BackendEvent
-import com.mathsemilio.katakanalearner.logic.event.UIRequest
+import com.mathsemilio.katakanalearner.domain.katakana.KatakanaSymbol
 import com.mathsemilio.katakanalearner.others.katakanaSymbolsList
 import kotlin.random.Random
 
-class GameBackend : IObserverContract {
+class GameBackend : BaseObservable<BackendEventListener>(), ViewModelRequestEventListener {
 
-    private lateinit var countDownTimer: CountDownTimer
+    private lateinit var mCountDownTimer: CountDownTimer
 
-    private val backendObservers = mutableListOf<IBackendObserver>()
-    private val katakanaSymbolList = katakanaSymbolsList.toMutableList()
+    private val mKatakanaSymbolList = katakanaSymbolsList.toMutableList()
 
-    private var difficultyCountDownTime = 0L
-    private var currentCountDownTime = 0L
-    private var score = 0
-    private var progress = 0
+    private var mDifficultyCountDownTime = 0L
+    private var mCurrentCountDownTime = 0L
+    private var mScore = 0
+    private var mProgress = 0
 
-    private var firstRomanizationGroupString = ""
-    private var secondRomanizationGroupString = ""
-    private var thirdRomanizationGroupString = ""
-    private var fourthRomanizationGroupString = ""
+    private var mFirstRomanizationGroupString = ""
+    private var mSecondRomanizationGroupString = ""
+    private var mThirdRomanizationGroupString = ""
+    private var mFourthRomanizationGroupString = ""
 
-    fun getUIRequest(uiRequest: UIRequest) {
-        when (uiRequest) {
-            is UIRequest.StartGame -> startGame(uiRequest.gameDifficultyValue)
-            is UIRequest.CheckAnswer -> checkAnswer(uiRequest.selectedRomanization)
-            UIRequest.GetNextSymbol -> getNextSymbol()
-            UIRequest.PauseTimer -> cancelTimer()
-            UIRequest.RestartTimer -> resumeTimer()
-        }
+    private fun startGame(difficultyValue: Int) {
+        mDifficultyCountDownTime = getCountdownTimeBasedOnDifficultyValue(difficultyValue)
+
+        mKatakanaSymbolList.shuffle()
+
+        gameScoreUpdated(mScore)
+        symbolUpdated(mKatakanaSymbolList.first())
+        generateRomanizationGroup()
+        startTimer(mDifficultyCountDownTime)
     }
 
-    private fun startGame(gameDifficultyValue: Int) {
-        difficultyCountDownTime = when (gameDifficultyValue) {
+    private fun getCountdownTimeBasedOnDifficultyValue(difficultyValue: Int): Long {
+        return when (difficultyValue) {
             GAME_DIFFICULTY_VALUE_BEGINNER -> COUNTDOWN_TIME_BEGINNER
             GAME_DIFFICULTY_VALUE_MEDIUM -> COUNTDOWN_TIME_MEDIUM
             GAME_DIFFICULTY_VALUE_HARD -> COUNTDOWN_TIME_HARD
-            else -> throw IllegalArgumentException(INVALID_GAME_DIFFICULTY_VALUE_EXCEPTION)
+            else -> throw IllegalArgumentException(ILLEGAL_GAME_DIFFICULTY_VALUE)
         }
-
-        katakanaSymbolList.shuffle()
-
-        notifyObserver(BackendEvent.NewSymbol(katakanaSymbolList.first()))
-        generateRomanizationGroup()
-        startTimer(difficultyCountDownTime)
     }
 
-    private fun startTimer(difficultyCountDownTimer: Long) {
-        countDownTimer = object : CountDownTimer(difficultyCountDownTimer, ONE_SECOND) {
+    private fun startTimer(difficultyCountdownTime: Long) {
+        mCountDownTimer = object : CountDownTimer(difficultyCountdownTime, ONE_SECOND) {
             override fun onTick(millisUntilFinished: Long) {
-                currentCountDownTime = (millisUntilFinished / 1000).also {
-                    notifyObserver(BackendEvent.GameCountDownTimeUpdated(it.toInt()))
+                mCurrentCountDownTime = (millisUntilFinished / 1000).also {
+                    countDownTimeUpdated(it.toInt())
                 }
             }
 
             override fun onFinish() {
-                currentCountDownTime = 0L
-                notifyObserver(BackendEvent.GameTimeOver)
+                mCurrentCountDownTime = 0L
+                onGameTimeOver()
             }
         }
-        countDownTimer.start()
+        mCountDownTimer.start()
     }
 
-    private fun cancelTimer() = countDownTimer.cancel()
+    private fun pauseTimer() = mCountDownTimer.cancel()
 
-    private fun resumeTimer() = startTimer(currentCountDownTime.times(ONE_SECOND))
+    private fun resumeTimer() = startTimer(mCurrentCountDownTime.times(1000L))
 
     private fun checkAnswer(selectedRomanization: String) {
-        cancelTimer()
+        pauseTimer()
 
-        if (katakanaSymbolList.first().romanization == selectedRomanization) {
-            notifyObserver(BackendEvent.GameScoreUpdated(++score))
-            notifyObserver(BackendEvent.CorrectAnswer)
-        } else {
-            notifyObserver(BackendEvent.WrongAnswer)
-        }
+        if (mKatakanaSymbolList.first().romanization == selectedRomanization) {
+            gameScoreUpdated(++mScore)
+            correctAnswer()
+        } else
+            wrongAnswer()
     }
 
     private fun getNextSymbol() {
-        notifyObserver(BackendEvent.GameProgressUpdated(++progress))
+        gameProgressUpdated(++mProgress)
+        mKatakanaSymbolList.removeAt(0)
+        symbolUpdated(mKatakanaSymbolList.first())
 
-        katakanaSymbolList.removeAt(0)
-
-        notifyObserver(BackendEvent.NewSymbol(katakanaSymbolList.first()))
-
-        if (katakanaSymbolList.size == 1) {
+        if (mKatakanaSymbolList.size == 1) {
             generateRomanizationGroup()
-            startTimer(difficultyCountDownTime)
-            notifyObserver(BackendEvent.GameFinished)
+            startTimer(mDifficultyCountDownTime)
+            gameFinished()
         } else {
             generateRomanizationGroup()
-            startTimer(difficultyCountDownTime)
+            startTimer(mDifficultyCountDownTime)
         }
     }
 
@@ -102,50 +92,91 @@ class GameBackend : IObserverContract {
             "A", "I", "U", "E", "O", "KA", "KI", "KU", "KE", "KO", "SA", "SHI", "SU", "SE", "SO",
             "TA", "CHI", "TSU", "TE", "TO", "NA", "NI", "NU", "NE", "NO", "HA", "HI", "FU", "HE",
             "HO", "MA", "MI", "MU", "ME", "MO", "YA", "YU", "YO", "RA", "RI", "RU", "RE", "RO",
-            "WA", "WI", "WE", "WO", "N"
+            "WA", "WO", "N"
         ).let { romanizationList ->
             romanizationList.shuffle()
-            romanizationList.filterNot { it == katakanaSymbolList.first().romanization }
+            romanizationList.filterNot { it == mKatakanaSymbolList.first().romanization }
         }
 
-        firstRomanizationGroupString = romanizationList.slice(0..11).random()
-        secondRomanizationGroupString = romanizationList.slice(12..23).random()
-        thirdRomanizationGroupString = romanizationList.slice(24..35).random()
-        fourthRomanizationGroupString = romanizationList.slice(36..46).random()
+        mFirstRomanizationGroupString = romanizationList.slice(0..11).random()
+        mSecondRomanizationGroupString = romanizationList.slice(12..23).random()
+        mThirdRomanizationGroupString = romanizationList.slice(24..35).random()
+        mFourthRomanizationGroupString = romanizationList.slice(36..44).random()
 
         setCorrectRomanizationAnswer()
 
-        notifyObserver(
-            BackendEvent.RomanizationGroupUpdated(
-                listOf(
-                    firstRomanizationGroupString,
-                    secondRomanizationGroupString,
-                    thirdRomanizationGroupString,
-                    fourthRomanizationGroupString
-                )
+        romanizationGroupUpdated(
+            listOf(
+                mFirstRomanizationGroupString,
+                mSecondRomanizationGroupString,
+                mThirdRomanizationGroupString,
+                mFourthRomanizationGroupString
             )
         )
     }
 
     private fun setCorrectRomanizationAnswer() {
         when (Random.nextInt(4)) {
-            0 -> firstRomanizationGroupString = katakanaSymbolList.first().romanization
-            1 -> secondRomanizationGroupString = katakanaSymbolList.first().romanization
-            2 -> thirdRomanizationGroupString = katakanaSymbolList.first().romanization
-            3 -> fourthRomanizationGroupString = katakanaSymbolList.first().romanization
+            0 -> mFirstRomanizationGroupString = mKatakanaSymbolList.first().romanization
+            1 -> mSecondRomanizationGroupString = mKatakanaSymbolList.first().romanization
+            2 -> mThirdRomanizationGroupString = mKatakanaSymbolList.first().romanization
+            3 -> mFourthRomanizationGroupString = mKatakanaSymbolList.first().romanization
         }
     }
 
-    override fun registerObserver(IBackendObserver: IBackendObserver) {
-        if (!backendObservers.contains(IBackendObserver))
-            backendObservers.add(IBackendObserver)
+    override fun onStartGameRequested(difficultyValue: Int) {
+        startGame(difficultyValue)
     }
 
-    override fun removeObserver(IBackendObserver: IBackendObserver) {
-        if (backendObservers.contains(IBackendObserver))
-            backendObservers.remove(IBackendObserver)
+    override fun onCheckUserAnswerRequested(selectedRomanization: String) {
+        checkAnswer(selectedRomanization)
     }
 
-    override fun notifyObserver(event: BackendEvent) =
-        backendObservers.forEach { it.onBackendEvent(event) }
+    override fun onGetNextSymbolRequested() {
+        getNextSymbol()
+    }
+
+    override fun onPauseGameTimerRequested() {
+        pauseTimer()
+    }
+
+    override fun onResumeGameTimerRequested() {
+        resumeTimer()
+    }
+
+    private fun symbolUpdated(symbol: KatakanaSymbol) {
+        getListeners().forEach { it.onSymbolUpdated(symbol) }
+    }
+
+    private fun countDownTimeUpdated(countDownTime: Int) {
+        getListeners().forEach { it.onGameCountdownTimeUpdated(countDownTime) }
+    }
+
+    private fun correctAnswer() {
+        getListeners().forEach { it.onCorrectAnswer() }
+    }
+
+    private fun wrongAnswer() {
+        getListeners().forEach { it.onWrongAnswer() }
+    }
+
+    private fun onGameTimeOver() {
+        getListeners().forEach { it.onGameTimeOver() }
+    }
+
+    private fun gameFinished() {
+        getListeners().forEach { it.onGameFinished() }
+    }
+
+    private fun gameScoreUpdated(score: Int) {
+        getListeners().forEach { it.onGameScoreUpdated(score) }
+    }
+
+    private fun gameProgressUpdated(progress: Int) {
+        getListeners().forEach { it.onGameProgressUpdated(progress) }
+    }
+
+    private fun romanizationGroupUpdated(romanizationGroupList: List<String>) {
+        getListeners().forEach { it.onRomanizationGroupUpdated(romanizationGroupList) }
+    }
 }
