@@ -16,7 +16,7 @@ Before the game starts, the user selects a difficulty for the game (which can al
 
 ### Application Screenshots
 To checkout screenshots, please visit this gallery:
-<p><a href="https://postimg.cc/gallery/Dv3Mv6b">Katakana Learner Randomizer Gallery</a></p>
+<p><a href="https://postimg.cc/gallery/w6mvNq4">Katakana Learner Randomizer Gallery</a></p>
 
 ### How can i try it?
 <p>The application is available in the Google Play Store and Amazon App Store! Be sure to try it out!</p>
@@ -28,21 +28,15 @@ Programming Language - **Kotlin**
 <p>3rd party Libraries and Technologies used:</p>
 <ol>
   <li>Material Design Components;</li>
-  <li>Jetpack Navigation Component;</li>
   <li>Preferences (PreferenceX);</li>
   <li>WorkManager;</li>
-  <li>ViewModel;</li>
-  <li>LiveData;</li>
-  <li>SafeArgs Gradle Plugin;</li>
-  <li>Data Binding.</li>
+  <li>Play Services Ads;</li>
+  <li>Leak Canary (Debug Implementation)</li>
 </ol >
 
 <i>For info on each of the libraries and technologies listed above:</i>
 <p><a href="https://github.com/material-components/material-components-android">Android Material Components</a></p>
-<p><a href="https://developer.android.com/guide/navigation/navigation-getting-started">Navigation Components</a></p>
 <p><a href="https://developer.android.com/guide/topics/ui/settings">Preferences (PreferenceX)</a></p>
 <p><a href="https://developer.android.com/topic/libraries/architecture/workmanager/basics">WorkManager</a></p>
-<p><a href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a></p>
-<p><a href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a></p>
-<p><a href="https://developer.android.com/guide/navigation/navigation-pass-data#Safe-args">SafeArgs</a></p>
-<p><a href="https://developer.android.com/topic/libraries/data-binding">Data Binding</a></p>
+<p><a href="https://developers.google.com/admob/android/sdk">Play Services Ads</a></p>
+<p><a href="https://square.github.io/leakcanary/">Leak Canary</a></p>
