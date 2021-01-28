@@ -9,8 +9,8 @@ android {
         applicationId "com.mathsemilio.katakanalearner"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 9
-        versionName "stable-1.0.0"
+        versionCode 10
+        versionName "stable-1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
