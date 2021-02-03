@@ -2,47 +2,55 @@ package com.mathsemilio.katakanalearner.ui.screens.game.main.usecase
 
 import android.content.Context
 import androidx.fragment.app.FragmentManager
-import com.mathsemilio.katakanalearner.commom.BaseObservable
+import com.mathsemilio.katakanalearner.commom.observable.BaseObservable
 import com.mathsemilio.katakanalearner.ui.others.DialogHelper
-import com.mathsemilio.katakanalearner.ui.screens.game.main.ControllerState
+import com.mathsemilio.katakanalearner.ui.screens.game.main.ScreenState
 
 class AlertUserUseCase(context: Context, fragmentManager: FragmentManager) :
-    BaseObservable<AlertUserUseCaseEventListener>() {
+    BaseObservable<AlertUserUseCase.Listener>() {
 
-    private val mDialogHelper = DialogHelper(context, fragmentManager)
+    interface Listener {
+        fun onPauseGameTimer()
+        fun onScreenStateChanged(newScreenState: ScreenState)
+        fun onPlayButtonClickSoundEffect()
+        fun onPlaySuccessSoundEffect()
+        fun onPlayErrorSoundEffect()
+    }
+
+    private val dialogHelper = DialogHelper(context, fragmentManager)
 
     fun alertUserOnExitGame(
         onDialogNegativeButtonClicked: () -> Unit,
         onDialogPositiveButtonClicked: () -> Unit
     ) {
-        pauseGameTimer()
-        playButtonClickSoundEffect()
-        changeCurrentControllerState(ControllerState.DIALOG_BEING_SHOWN)
-        mDialogHelper.showExitGameDialog(
+        onPauseGameTimer()
+        onPlayButtonClickSoundEffect()
+        onChangeCurrentScreenState(ScreenState.DIALOG_BEING_SHOWN)
+        dialogHelper.showExitGameDialog(
             { onDialogNegativeButtonClicked() },
             {
                 onDialogPositiveButtonClicked()
-                changeCurrentControllerState(ControllerState.RUNNING)
+                onChangeCurrentScreenState(ScreenState.TIMER_RUNNING)
             }
         )
     }
 
     fun alertUserOnGamePaused(onDialogPositiveButtonClicked: () -> Unit) {
-        pauseGameTimer()
-        playButtonClickSoundEffect()
-        changeCurrentControllerState(ControllerState.DIALOG_BEING_SHOWN)
-        mDialogHelper.showGamePausedDialog {
+        onPauseGameTimer()
+        onPlayButtonClickSoundEffect()
+        onChangeCurrentScreenState(ScreenState.DIALOG_BEING_SHOWN)
+        dialogHelper.showGamePausedDialog {
             onDialogPositiveButtonClicked()
-            changeCurrentControllerState(ControllerState.RUNNING)
+            onChangeCurrentScreenState(ScreenState.TIMER_RUNNING)
         }
     }
 
     fun alertUserOnCorrectAnswer(onDialogPositiveButtonClicked: () -> Unit) {
-        playSuccessSoundEffect()
-        changeCurrentControllerState(ControllerState.DIALOG_BEING_SHOWN)
-        mDialogHelper.showCorrectAnswerDialog {
+        onPlaySuccessSoundEffect()
+        onChangeCurrentScreenState(ScreenState.DIALOG_BEING_SHOWN)
+        dialogHelper.showCorrectAnswerDialog {
             onDialogPositiveButtonClicked()
-            changeCurrentControllerState(ControllerState.RUNNING)
+            onChangeCurrentScreenState(ScreenState.TIMER_RUNNING)
         }
     }
 
@@ -50,11 +58,11 @@ class AlertUserUseCase(context: Context, fragmentManager: FragmentManager) :
         correctRomanization: String,
         onDialogPositiveButtonClicked: () -> Unit
     ) {
-        playErrorSoundEffect()
-        changeCurrentControllerState(ControllerState.DIALOG_BEING_SHOWN)
-        mDialogHelper.showWrongAnswerDialog(correctRomanization) {
+        onPlayErrorSoundEffect()
+        onChangeCurrentScreenState(ScreenState.DIALOG_BEING_SHOWN)
+        dialogHelper.showWrongAnswerDialog(correctRomanization) {
             onDialogPositiveButtonClicked()
-            changeCurrentControllerState(ControllerState.RUNNING)
+            onChangeCurrentScreenState(ScreenState.TIMER_RUNNING)
         }
     }
 
@@ -62,31 +70,31 @@ class AlertUserUseCase(context: Context, fragmentManager: FragmentManager) :
         correctRomanization: String,
         onDialogPositiveButtonClicked: () -> Unit
     ) {
-        playErrorSoundEffect()
-        changeCurrentControllerState(ControllerState.DIALOG_BEING_SHOWN)
-        mDialogHelper.showTimeOverDialog(correctRomanization) {
+        onPlayErrorSoundEffect()
+        onChangeCurrentScreenState(ScreenState.DIALOG_BEING_SHOWN)
+        dialogHelper.showTimeOverDialog(correctRomanization) {
             onDialogPositiveButtonClicked()
-            changeCurrentControllerState(ControllerState.RUNNING)
+            onChangeCurrentScreenState(ScreenState.TIMER_RUNNING)
         }
     }
 
-    private fun pauseGameTimer() {
+    private fun onPauseGameTimer() {
         getListeners().forEach { it.onPauseGameTimer() }
     }
 
-    private fun changeCurrentControllerState(state: ControllerState) {
-        getListeners().forEach { it.onControllerStateChanged(state) }
+    private fun onChangeCurrentScreenState(newState: ScreenState) {
+        getListeners().forEach { it.onScreenStateChanged(newState) }
     }
 
-    private fun playButtonClickSoundEffect() {
+    private fun onPlayButtonClickSoundEffect() {
         getListeners().forEach { it.onPlayButtonClickSoundEffect() }
     }
 
-    private fun playSuccessSoundEffect() {
+    private fun onPlaySuccessSoundEffect() {
         getListeners().forEach { it.onPlaySuccessSoundEffect() }
     }
 
-    private fun playErrorSoundEffect() {
+    private fun onPlayErrorSoundEffect() {
         getListeners().forEach { it.onPlayErrorSoundEffect() }
     }
 }

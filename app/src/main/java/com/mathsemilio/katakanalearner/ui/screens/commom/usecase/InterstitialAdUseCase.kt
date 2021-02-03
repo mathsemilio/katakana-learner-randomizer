@@ -1,4 +1,4 @@
-package com.mathsemilio.katakanalearner.ui.usecase
+package com.mathsemilio.katakanalearner.ui.screens.commom.usecase
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
@@ -9,15 +9,20 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.mathsemilio.katakanalearner.R
-import com.mathsemilio.katakanalearner.commom.BaseObservable
+import com.mathsemilio.katakanalearner.commom.observable.BaseObservable
 
-class ShowInterstitialAdUseCase(
+class InterstitialAdUseCase(
     private val activity: FragmentActivity,
     private val context: Context,
     private val adRequest: AdRequest,
-) : BaseObservable<OnInterstitialAdEventListener>() {
+) : BaseObservable<InterstitialAdUseCase.Listener>() {
 
-    private var mInterstitialAd: InterstitialAd? = null
+    interface Listener {
+        fun onAdDismissed()
+        fun onAdFailedToShow()
+    }
+
+    private var useCaseInterstitialAd: InterstitialAd? = null
 
     init {
         initializeInterstitialAd()
@@ -30,12 +35,12 @@ class ShowInterstitialAdUseCase(
             adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    mInterstitialAd = interstitialAd
-                    mInterstitialAd?.fullScreenContentCallback = getFullScreenContentCallback()
+                    useCaseInterstitialAd = interstitialAd
+                    useCaseInterstitialAd?.fullScreenContentCallback = getFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    mInterstitialAd = null
+                    useCaseInterstitialAd = null
                 }
             }
         )
@@ -44,27 +49,27 @@ class ShowInterstitialAdUseCase(
     private fun getFullScreenContentCallback(): FullScreenContentCallback {
         return object : FullScreenContentCallback() {
             override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                onShowInterstitialAdFailed()
+                onAdFailedToShow()
             }
 
             override fun onAdDismissedFullScreenContent() {
-                onInterstitialAdDismissed()
+                onAdDismissed()
             }
         }
     }
 
     fun showInterstitialAd() {
-        if (mInterstitialAd == null)
-            onShowInterstitialAdFailed()
+        if (useCaseInterstitialAd == null)
+            onAdFailedToShow()
         else
-            mInterstitialAd?.show(activity)
+            useCaseInterstitialAd?.show(activity)
     }
 
-    private fun onShowInterstitialAdFailed() {
-        getListeners().forEach { it.onShowInterstitialAdFailed() }
+    private fun onAdFailedToShow() {
+        getListeners().forEach { it.onAdFailedToShow() }
     }
 
-    private fun onInterstitialAdDismissed() {
-        getListeners().forEach { it.onInterstitialAdDismissed() }
+    private fun onAdDismissed() {
+        getListeners().forEach { it.onAdDismissed() }
     }
 }

@@ -1,4 +1,4 @@
-package com.mathsemilio.katakanalearner.logic.backend
+package com.mathsemilio.katakanalearner.ui.screens.game.main.viewmodel
 
 interface ViewModelRequestEventListener {
     fun onStartGameRequested(difficultyValue: Int)

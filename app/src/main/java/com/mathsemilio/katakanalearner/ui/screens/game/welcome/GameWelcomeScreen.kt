@@ -6,31 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.ads.AdRequest
 import com.mathsemilio.katakanalearner.data.preferences.repository.PreferencesRepository
-import com.mathsemilio.katakanalearner.others.soundeffects.SoundEffectsModule
+import com.mathsemilio.katakanalearner.others.SoundEffectsModule
 import com.mathsemilio.katakanalearner.ui.others.ScreensNavigator
 import com.mathsemilio.katakanalearner.ui.screens.commom.BaseFragment
-import com.mathsemilio.katakanalearner.ui.usecase.OnInterstitialAdEventListener
-import com.mathsemilio.katakanalearner.ui.usecase.ShowInterstitialAdUseCase
+import com.mathsemilio.katakanalearner.ui.screens.commom.usecase.InterstitialAdUseCase
 
-class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener,
-    OnInterstitialAdEventListener {
+class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, InterstitialAdUseCase.Listener {
 
-    private lateinit var mView: GameWelcomeScreenViewImpl
+    private lateinit var gameWelcomeScreenView: GameWelcomeScreenViewImpl
 
-    private lateinit var mPreferencesRepository: PreferencesRepository
-    private lateinit var mSoundEffectsModule: SoundEffectsModule
-    private lateinit var mScreensNavigator: ScreensNavigator
+    private lateinit var preferencesRepository: PreferencesRepository
+    private lateinit var soundEffectsModule: SoundEffectsModule
+    private lateinit var screensNavigator: ScreensNavigator
 
-    private lateinit var mShowInterstitialAdUseCase: ShowInterstitialAdUseCase
-    private lateinit var mAdRequest: AdRequest
+    private lateinit var interstitialAdUseCase: InterstitialAdUseCase
+    private lateinit var adRequest: AdRequest
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mView = getCompositionRoot().getViewFactory().getGameWelcomeScreenView(container)
-        return mView.getRootView()
+        gameWelcomeScreenView = compositionRoot.viewFactory.getGameWelcomeScreenView(container)
+        return gameWelcomeScreenView.getRootView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,54 +36,56 @@ class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener,
 
         initialize()
 
-        mView.onControllerViewCreated(mPreferencesRepository.getGameDefaultOption())
+        gameWelcomeScreenView.setupUI(preferencesRepository.gameDefaultOption)
 
-        mShowInterstitialAdUseCase.registerListener(this)
+        interstitialAdUseCase.addListener(this)
     }
 
     private fun initialize() {
-        mPreferencesRepository = getCompositionRoot().getPreferencesRepository()
+        preferencesRepository = compositionRoot.preferencesRepository
 
-        mSoundEffectsModule = getCompositionRoot().getSoundEffectsModule(
-            mPreferencesRepository.getSoundEffectsVolume()
-        )
+        soundEffectsModule = compositionRoot.soundEffectsModule
 
-        mScreensNavigator = getCompositionRoot().getScreensNavigator()
+        screensNavigator = compositionRoot.screensNavigator
 
-        mAdRequest = getCompositionRoot().getAdRequest()
+        adRequest = compositionRoot.adRequest
 
-        mShowInterstitialAdUseCase = getCompositionRoot().getShowInterstitialAdUseCase()
+        interstitialAdUseCase = compositionRoot.interstitialAdUseCase
     }
 
     override fun onPlayClickSoundEffect() {
-        mSoundEffectsModule.playClickSoundEffect()
+        soundEffectsModule.playClickSoundEffect()
     }
 
     override fun onSettingsIconClicked() {
-        mScreensNavigator.navigateToSettingsScreen()
+        screensNavigator.navigateToSettingsScreen()
     }
 
     override fun onStartButtonClicked(difficultyValue: Int) {
-        mSoundEffectsModule.playButtonClickSoundEffect()
-        mShowInterstitialAdUseCase.showInterstitialAd()
+        soundEffectsModule.playButtonClickSoundEffect()
+        interstitialAdUseCase.showInterstitialAd()
     }
 
-    override fun onShowInterstitialAdFailed() {
-        mScreensNavigator.navigateToMainScreen(mView.getDifficultyValue())
+    override fun onAdDismissed() {
+        screensNavigator.navigateToMainScreen(gameWelcomeScreenView.getDifficultyValue())
     }
 
-    override fun onInterstitialAdDismissed() {
-        mScreensNavigator.navigateToMainScreen(mView.getDifficultyValue())
+    override fun onAdFailedToShow() {
+        screensNavigator.navigateToMainScreen(gameWelcomeScreenView.getDifficultyValue())
     }
 
     override fun onStart() {
-        mView.registerListener(this)
+        gameWelcomeScreenView.addListener(this)
         super.onStart()
     }
 
+    override fun onStop() {
+        gameWelcomeScreenView.removeListener(this)
+        super.onStop()
+    }
+
     override fun onDestroyView() {
-        mView.removeListener(this)
-        mShowInterstitialAdUseCase.removeListener(this)
+        interstitialAdUseCase.removeListener(this)
         super.onDestroyView()
     }
 }

@@ -9,8 +9,8 @@ android {
         applicationId "com.mathsemilio.katakanalearner"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10
-        versionName "stable-1.0.1"
+        versionCode 11
+        versionName "stable-1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,7 +39,7 @@ android {
 
 dependencies {
     def preference_version = "1.1.1"
-    def work_version = "2.4.0"
+    def work_version = "2.5.0"
     def lottie_version = "3.6.0"
     def play_services_ads_version = "19.7.0"
     def leakCanary_version = "2.6"

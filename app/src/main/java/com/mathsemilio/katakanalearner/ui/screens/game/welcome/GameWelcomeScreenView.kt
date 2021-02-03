@@ -7,6 +7,6 @@ interface GameWelcomeScreenView {
         fun onStartButtonClicked(difficultyValue: Int)
     }
 
-    fun onControllerViewCreated(difficultyValueFromPreference: String)
+    fun setupUI(difficultyValueFromPreference: String)
     fun getDifficultyValue(): Int
 }

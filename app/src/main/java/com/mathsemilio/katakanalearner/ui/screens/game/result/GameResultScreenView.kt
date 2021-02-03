@@ -9,6 +9,6 @@ interface GameResultScreenView {
         fun onShareScoreButtonClicked()
     }
 
-    fun onControllerViewCreated(difficultyValue: Int, score: Int, perfectScores: Int)
-    fun loadGameResultScreenBannerAd(adRequest: AdRequest)
+    fun setupUI(difficultyValue: Int, score: Int, perfectScores: Int)
+    fun loadBannerAd(adRequest: AdRequest)
 }

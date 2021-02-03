@@ -2,14 +2,12 @@ package com.mathsemilio.katakanalearner.ui.screens.settings
 
 import androidx.preference.PreferenceFragmentCompat
 import com.mathsemilio.katakanalearner.di.ControllerCompositionRoot
-import com.mathsemilio.katakanalearner.others.KatakanaRandomizerApplication
+import com.mathsemilio.katakanalearner.ui.screens.MainActivity
 
 abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
 
-    protected fun getCompositionRoot(): ControllerCompositionRoot {
-        return ControllerCompositionRoot(
-            (requireActivity().application as KatakanaRandomizerApplication).compositionRoot,
-            fragment = this
-        )
+    private val _compositionRoot by lazy {
+        ControllerCompositionRoot((requireActivity() as MainActivity).activityCompositionRoot)
     }
+    val compositionRoot get() = _compositionRoot
 }

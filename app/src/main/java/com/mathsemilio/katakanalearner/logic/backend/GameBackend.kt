@@ -2,35 +2,49 @@ package com.mathsemilio.katakanalearner.logic.backend
 
 import android.os.CountDownTimer
 import com.mathsemilio.katakanalearner.commom.*
+import com.mathsemilio.katakanalearner.commom.observable.BaseObservable
 import com.mathsemilio.katakanalearner.domain.katakana.KatakanaSymbol
 import com.mathsemilio.katakanalearner.others.katakanaSymbolsList
+import com.mathsemilio.katakanalearner.ui.screens.game.main.viewmodel.ViewModelRequestEventListener
 import kotlin.random.Random
 
-class GameBackend : BaseObservable<BackendEventListener>(), ViewModelRequestEventListener {
+class GameBackend : BaseObservable<GameBackend.Listener>(), ViewModelRequestEventListener {
 
-    private lateinit var mCountDownTimer: CountDownTimer
+    interface Listener {
+        fun onSymbolUpdated(newSymbol: KatakanaSymbol)
+        fun onGameScoreUpdated(newScore: Int)
+        fun onGameProgressUpdated(updatedProgress: Int)
+        fun onGameCountdownTimeUpdated(updatedCountdownTime: Int)
+        fun onRomanizationGroupUpdated(updatedRomanizationGroupList: List<String>)
+        fun onCorrectAnswer()
+        fun onWrongAnswer()
+        fun onGameTimeOver()
+        fun onGameFinished()
+    }
 
-    private val mKatakanaSymbolList = katakanaSymbolsList.toMutableList()
+    private lateinit var countDownTimer: CountDownTimer
 
-    private var mDifficultyCountDownTime = 0L
-    private var mCurrentCountDownTime = 0L
-    private var mScore = 0
-    private var mProgress = 0
+    private val katakanaSymbolList = katakanaSymbolsList.toMutableList()
 
-    private var mFirstRomanizationGroupString = ""
-    private var mSecondRomanizationGroupString = ""
-    private var mThirdRomanizationGroupString = ""
-    private var mFourthRomanizationGroupString = ""
+    private var difficultyCountDownTime = 0L
+    private var currentCountDownTime = 0L
+    private var score = 0
+    private var progress = 0
+
+    private var firstRomanizationGroupString = ""
+    private var secondRomanizationGroupString = ""
+    private var thirdRomanizationGroupString = ""
+    private var fourthRomanizationGroupString = ""
 
     private fun startGame(difficultyValue: Int) {
-        mDifficultyCountDownTime = getCountdownTimeBasedOnDifficultyValue(difficultyValue)
+        difficultyCountDownTime = getCountdownTimeBasedOnDifficultyValue(difficultyValue)
 
-        mKatakanaSymbolList.shuffle()
+        katakanaSymbolList.shuffle()
 
-        gameScoreUpdated(mScore)
-        symbolUpdated(mKatakanaSymbolList.first())
+        onGameScoreUpdated(score)
+        onSymbolUpdated(katakanaSymbolList.first())
         generateRomanizationGroup()
-        startTimer(mDifficultyCountDownTime)
+        startTimer(difficultyCountDownTime)
     }
 
     private fun getCountdownTimeBasedOnDifficultyValue(difficultyValue: Int): Long {
@@ -43,47 +57,47 @@ class GameBackend : BaseObservable<BackendEventListener>(), ViewModelRequestEven
     }
 
     private fun startTimer(difficultyCountdownTime: Long) {
-        mCountDownTimer = object : CountDownTimer(difficultyCountdownTime, ONE_SECOND) {
+        countDownTimer = object : CountDownTimer(difficultyCountdownTime, ONE_SECOND) {
             override fun onTick(millisUntilFinished: Long) {
-                mCurrentCountDownTime = (millisUntilFinished / 1000).also {
-                    countDownTimeUpdated(it.toInt())
+                currentCountDownTime = (millisUntilFinished / 1000).also {
+                    onCountDownTimeUpdated(it.toInt())
                 }
             }
 
             override fun onFinish() {
-                mCurrentCountDownTime = 0L
+                currentCountDownTime = 0L
                 onGameTimeOver()
             }
         }
-        mCountDownTimer.start()
+        countDownTimer.start()
     }
 
-    private fun pauseTimer() = mCountDownTimer.cancel()
+    private fun onPauseTimer() = countDownTimer.cancel()
 
-    private fun resumeTimer() = startTimer(mCurrentCountDownTime.times(1000L))
+    private fun resumeTimer() = startTimer(currentCountDownTime.times(1000L))
 
     private fun checkAnswer(selectedRomanization: String) {
-        pauseTimer()
+        onPauseTimer()
 
-        if (mKatakanaSymbolList.first().romanization == selectedRomanization) {
-            gameScoreUpdated(++mScore)
-            correctAnswer()
+        if (katakanaSymbolList.first().romanization == selectedRomanization) {
+            onGameScoreUpdated(++score)
+            onCorrectAnswer()
         } else
-            wrongAnswer()
+            onWrongAnswer()
     }
 
     private fun getNextSymbol() {
-        gameProgressUpdated(++mProgress)
-        mKatakanaSymbolList.removeAt(0)
-        symbolUpdated(mKatakanaSymbolList.first())
+        onGameProgressUpdated(++progress)
+        katakanaSymbolList.removeAt(0)
+        onSymbolUpdated(katakanaSymbolList.first())
 
-        if (mKatakanaSymbolList.size == 1) {
+        if (katakanaSymbolList.size == 1) {
             generateRomanizationGroup()
-            startTimer(mDifficultyCountDownTime)
-            gameFinished()
+            startTimer(difficultyCountDownTime)
+            onGameFinished()
         } else {
             generateRomanizationGroup()
-            startTimer(mDifficultyCountDownTime)
+            startTimer(difficultyCountDownTime)
         }
     }
 
@@ -95,32 +109,32 @@ class GameBackend : BaseObservable<BackendEventListener>(), ViewModelRequestEven
             "WA", "WO", "N"
         ).let { romanizationList ->
             romanizationList.shuffle()
-            romanizationList.filterNot { it == mKatakanaSymbolList.first().romanization }
+            romanizationList.filterNot { it == katakanaSymbolList.first().romanization }
         }
 
-        mFirstRomanizationGroupString = romanizationList.slice(0..11).random()
-        mSecondRomanizationGroupString = romanizationList.slice(12..23).random()
-        mThirdRomanizationGroupString = romanizationList.slice(24..35).random()
-        mFourthRomanizationGroupString = romanizationList.slice(36..44).random()
+        firstRomanizationGroupString = romanizationList.slice(0..11).random()
+        secondRomanizationGroupString = romanizationList.slice(12..23).random()
+        thirdRomanizationGroupString = romanizationList.slice(24..35).random()
+        fourthRomanizationGroupString = romanizationList.slice(36..44).random()
 
         setCorrectRomanizationAnswer()
 
-        romanizationGroupUpdated(
+        onRomanizationGroupUpdated(
             listOf(
-                mFirstRomanizationGroupString,
-                mSecondRomanizationGroupString,
-                mThirdRomanizationGroupString,
-                mFourthRomanizationGroupString
+                firstRomanizationGroupString,
+                secondRomanizationGroupString,
+                thirdRomanizationGroupString,
+                fourthRomanizationGroupString
             )
         )
     }
 
     private fun setCorrectRomanizationAnswer() {
         when (Random.nextInt(4)) {
-            0 -> mFirstRomanizationGroupString = mKatakanaSymbolList.first().romanization
-            1 -> mSecondRomanizationGroupString = mKatakanaSymbolList.first().romanization
-            2 -> mThirdRomanizationGroupString = mKatakanaSymbolList.first().romanization
-            3 -> mFourthRomanizationGroupString = mKatakanaSymbolList.first().romanization
+            0 -> firstRomanizationGroupString = katakanaSymbolList.first().romanization
+            1 -> secondRomanizationGroupString = katakanaSymbolList.first().romanization
+            2 -> thirdRomanizationGroupString = katakanaSymbolList.first().romanization
+            3 -> fourthRomanizationGroupString = katakanaSymbolList.first().romanization
         }
     }
 
@@ -137,26 +151,26 @@ class GameBackend : BaseObservable<BackendEventListener>(), ViewModelRequestEven
     }
 
     override fun onPauseGameTimerRequested() {
-        pauseTimer()
+        onPauseTimer()
     }
 
     override fun onResumeGameTimerRequested() {
         resumeTimer()
     }
 
-    private fun symbolUpdated(symbol: KatakanaSymbol) {
+    private fun onSymbolUpdated(symbol: KatakanaSymbol) {
         getListeners().forEach { it.onSymbolUpdated(symbol) }
     }
 
-    private fun countDownTimeUpdated(countDownTime: Int) {
+    private fun onCountDownTimeUpdated(countDownTime: Int) {
         getListeners().forEach { it.onGameCountdownTimeUpdated(countDownTime) }
     }
 
-    private fun correctAnswer() {
+    private fun onCorrectAnswer() {
         getListeners().forEach { it.onCorrectAnswer() }
     }
 
-    private fun wrongAnswer() {
+    private fun onWrongAnswer() {
         getListeners().forEach { it.onWrongAnswer() }
     }
 
@@ -164,19 +178,19 @@ class GameBackend : BaseObservable<BackendEventListener>(), ViewModelRequestEven
         getListeners().forEach { it.onGameTimeOver() }
     }
 
-    private fun gameFinished() {
+    private fun onGameFinished() {
         getListeners().forEach { it.onGameFinished() }
     }
 
-    private fun gameScoreUpdated(score: Int) {
+    private fun onGameScoreUpdated(score: Int) {
         getListeners().forEach { it.onGameScoreUpdated(score) }
     }
 
-    private fun gameProgressUpdated(progress: Int) {
+    private fun onGameProgressUpdated(progress: Int) {
         getListeners().forEach { it.onGameProgressUpdated(progress) }
     }
 
-    private fun romanizationGroupUpdated(romanizationGroupList: List<String>) {
+    private fun onRomanizationGroupUpdated(romanizationGroupList: List<String>) {
         getListeners().forEach { it.onRomanizationGroupUpdated(romanizationGroupList) }
     }
 }

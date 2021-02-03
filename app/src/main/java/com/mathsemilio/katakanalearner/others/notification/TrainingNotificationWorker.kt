@@ -1,4 +1,4 @@
-package com.mathsemilio.katakanalearner.others
+package com.mathsemilio.katakanalearner.others.notification
 
 import android.content.Context
 import androidx.work.Worker

@@ -20,7 +20,7 @@
         tools:targetApi="n">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/adMobTestAppId" />
+            android:value="ca-app-pub-5242007423595790~9952474119" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
