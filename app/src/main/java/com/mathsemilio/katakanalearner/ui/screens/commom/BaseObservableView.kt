@@ -2,7 +2,7 @@ package com.mathsemilio.katakanalearner.ui.screens.commom
 
 import android.content.Context
 import android.view.View
-import com.mathsemilio.katakanalearner.commom.observable.BaseObservable
+import com.mathsemilio.katakanalearner.commom.baseobservable.BaseObservable
 
 abstract class BaseObservableView<Listener> : BaseObservable<Listener>(), IView {
 

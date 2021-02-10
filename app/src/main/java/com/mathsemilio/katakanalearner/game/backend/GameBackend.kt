@@ -1,14 +1,14 @@
-package com.mathsemilio.katakanalearner.logic.backend
+package com.mathsemilio.katakanalearner.game.backend
 
 import android.os.CountDownTimer
 import com.mathsemilio.katakanalearner.commom.*
-import com.mathsemilio.katakanalearner.commom.observable.BaseObservable
-import com.mathsemilio.katakanalearner.domain.katakana.KatakanaSymbol
+import com.mathsemilio.katakanalearner.commom.baseobservable.BaseObservable
+import com.mathsemilio.katakanalearner.domain.entity.katakana.KatakanaSymbol
 import com.mathsemilio.katakanalearner.others.katakanaSymbolsList
-import com.mathsemilio.katakanalearner.ui.screens.game.main.viewmodel.ViewModelRequestEventListener
+import com.mathsemilio.katakanalearner.game.model.ModelRequestEventListener
 import kotlin.random.Random
 
-class GameBackend : BaseObservable<GameBackend.Listener>(), ViewModelRequestEventListener {
+class GameBackend : BaseObservable<GameBackend.Listener>(), ModelRequestEventListener {
 
     interface Listener {
         fun onSymbolUpdated(newSymbol: KatakanaSymbol)
@@ -159,38 +159,38 @@ class GameBackend : BaseObservable<GameBackend.Listener>(), ViewModelRequestEven
     }
 
     private fun onSymbolUpdated(symbol: KatakanaSymbol) {
-        getListeners().forEach { it.onSymbolUpdated(symbol) }
+        listeners.forEach { it.onSymbolUpdated(symbol) }
     }
 
     private fun onCountDownTimeUpdated(countDownTime: Int) {
-        getListeners().forEach { it.onGameCountdownTimeUpdated(countDownTime) }
+        listeners.forEach { it.onGameCountdownTimeUpdated(countDownTime) }
     }
 
     private fun onCorrectAnswer() {
-        getListeners().forEach { it.onCorrectAnswer() }
+        listeners.forEach { it.onCorrectAnswer() }
     }
 
     private fun onWrongAnswer() {
-        getListeners().forEach { it.onWrongAnswer() }
+        listeners.forEach { it.onWrongAnswer() }
     }
 
     private fun onGameTimeOver() {
-        getListeners().forEach { it.onGameTimeOver() }
+        listeners.forEach { it.onGameTimeOver() }
     }
 
     private fun onGameFinished() {
-        getListeners().forEach { it.onGameFinished() }
+        listeners.forEach { it.onGameFinished() }
     }
 
     private fun onGameScoreUpdated(score: Int) {
-        getListeners().forEach { it.onGameScoreUpdated(score) }
+        listeners.forEach { it.onGameScoreUpdated(score) }
     }
 
     private fun onGameProgressUpdated(progress: Int) {
-        getListeners().forEach { it.onGameProgressUpdated(progress) }
+        listeners.forEach { it.onGameProgressUpdated(progress) }
     }
 
     private fun onRomanizationGroupUpdated(romanizationGroupList: List<String>) {
-        getListeners().forEach { it.onRomanizationGroupUpdated(romanizationGroupList) }
+        listeners.forEach { it.onRomanizationGroupUpdated(romanizationGroupList) }
     }
 }

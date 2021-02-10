@@ -116,14 +116,14 @@ class GameWelcomeScreenViewImpl(inflater: LayoutInflater, container: ViewGroup?)
     }
 
     private fun onPlayClickSoundEffect() {
-        getListeners().forEach { it.onPlayClickSoundEffect() }
+        listeners.forEach { it.onPlayClickSoundEffect() }
     }
 
     private fun onNavigateToSettingsScreen() {
-        getListeners().forEach { it.onSettingsIconClicked() }
+        listeners.forEach { it.onSettingsIconClicked() }
     }
 
     private fun onNavigateToMainScreen(difficultyValue: Int) {
-        getListeners().forEach { it.onStartButtonClicked(difficultyValue) }
+        listeners.forEach { it.onStartButtonClicked(difficultyValue) }
     }
 }

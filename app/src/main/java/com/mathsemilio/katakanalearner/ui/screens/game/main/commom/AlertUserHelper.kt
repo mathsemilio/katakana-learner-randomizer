@@ -1,10 +1,9 @@
-package com.mathsemilio.katakanalearner.ui.screens.game.main.usecase
+package com.mathsemilio.katakanalearner.ui.screens.game.main.commom
 
-import com.mathsemilio.katakanalearner.commom.observable.BaseObservable
+import com.mathsemilio.katakanalearner.commom.baseobservable.BaseObservable
 import com.mathsemilio.katakanalearner.ui.others.DialogHelper
-import com.mathsemilio.katakanalearner.ui.screens.game.main.ScreenState
 
-class AlertUserUseCase(private val dialogHelper: DialogHelper) : BaseObservable<AlertUserUseCase.Listener>() {
+class AlertUserHelper(private val dialogHelper: DialogHelper) : BaseObservable<AlertUserHelper.Listener>() {
 
     interface Listener {
         fun onPauseGameTimer()
@@ -74,22 +73,22 @@ class AlertUserUseCase(private val dialogHelper: DialogHelper) : BaseObservable<
     }
 
     private fun onPauseGameTimer() {
-        getListeners().forEach { it.onPauseGameTimer() }
+        listeners.forEach { it.onPauseGameTimer() }
     }
 
     private fun onChangeCurrentScreenState(newState: ScreenState) {
-        getListeners().forEach { it.onScreenStateChanged(newState) }
+        listeners.forEach { it.onScreenStateChanged(newState) }
     }
 
     private fun onPlayButtonClickSoundEffect() {
-        getListeners().forEach { it.onPlayButtonClickSoundEffect() }
+        listeners.forEach { it.onPlayButtonClickSoundEffect() }
     }
 
     private fun onPlaySuccessSoundEffect() {
-        getListeners().forEach { it.onPlaySuccessSoundEffect() }
+        listeners.forEach { it.onPlaySuccessSoundEffect() }
     }
 
     private fun onPlayErrorSoundEffect() {
-        getListeners().forEach { it.onPlayErrorSoundEffect() }
+        listeners.forEach { it.onPlayErrorSoundEffect() }
     }
 }

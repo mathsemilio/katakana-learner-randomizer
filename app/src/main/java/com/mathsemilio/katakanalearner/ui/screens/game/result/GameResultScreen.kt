@@ -14,7 +14,7 @@ import com.mathsemilio.katakanalearner.data.preferences.repository.PreferencesRe
 import com.mathsemilio.katakanalearner.others.SoundEffectsModule
 import com.mathsemilio.katakanalearner.ui.others.ScreensNavigator
 import com.mathsemilio.katakanalearner.ui.screens.commom.BaseFragment
-import com.mathsemilio.katakanalearner.ui.screens.game.result.usecase.ShareGameScoreUseCase
+import com.mathsemilio.katakanalearner.ui.screens.game.result.commom.ShareGameScoreHelper
 
 class GameResultScreen : BaseFragment(), GameResultScreenView.Listener {
 
@@ -33,8 +33,8 @@ class GameResultScreen : BaseFragment(), GameResultScreenView.Listener {
     private lateinit var gameResultScreenView: GameResultScreenViewImpl
 
     private lateinit var onBackPressedCallback: OnBackPressedCallback
-    private lateinit var shareGameScoreUseCase: ShareGameScoreUseCase
     private lateinit var preferencesRepository: PreferencesRepository
+    private lateinit var shareGameScoreHelper: ShareGameScoreHelper
     private lateinit var soundEffectsModule: SoundEffectsModule
     private lateinit var screensNavigator: ScreensNavigator
 
@@ -52,9 +52,9 @@ class GameResultScreen : BaseFragment(), GameResultScreenView.Listener {
 
         onBackPressedCallback = compositionRoot.getOnBackPressedCallback { onHomeButtonClicked() }
 
-        shareGameScoreUseCase = compositionRoot.getShareGameScoreUseCase(score)
-
         preferencesRepository = compositionRoot.preferencesRepository
+
+        shareGameScoreHelper = compositionRoot.shareGameScoreHelper
 
         soundEffectsModule = compositionRoot.soundEffectsModule
 
@@ -110,7 +110,7 @@ class GameResultScreen : BaseFragment(), GameResultScreenView.Listener {
 
     override fun onShareScoreButtonClicked() {
         soundEffectsModule.playButtonClickSoundEffect()
-        shareGameScoreUseCase.shareGameScore()
+        shareGameScoreHelper.shareGameScore(score)
     }
 
     override fun onStart() {

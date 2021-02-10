@@ -1,6 +1,6 @@
-package com.mathsemilio.katakanalearner.ui.screens.game.main.viewmodel
+package com.mathsemilio.katakanalearner.game.model
 
-interface ViewModelRequestEventListener {
+interface ModelRequestEventListener {
     fun onStartGameRequested(difficultyValue: Int)
     fun onCheckUserAnswerRequested(selectedRomanization: String)
     fun onGetNextSymbolRequested()

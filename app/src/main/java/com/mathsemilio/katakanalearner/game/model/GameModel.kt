@@ -1,10 +1,10 @@
-package com.mathsemilio.katakanalearner.ui.screens.game.main.viewmodel
+package com.mathsemilio.katakanalearner.game.model
 
-import com.mathsemilio.katakanalearner.commom.observable.BaseObservable
-import com.mathsemilio.katakanalearner.domain.katakana.KatakanaSymbol
-import com.mathsemilio.katakanalearner.logic.backend.GameBackend
+import com.mathsemilio.katakanalearner.commom.baseobservable.BaseObservable
+import com.mathsemilio.katakanalearner.domain.entity.katakana.KatakanaSymbol
+import com.mathsemilio.katakanalearner.game.backend.GameBackend
 
-class GameMainScreenViewModel : BaseObservable<GameMainScreenViewModel.Listener>(), GameBackend.Listener {
+class GameModel : BaseObservable<GameModel.Listener>(), GameBackend.Listener {
 
     interface Listener {
         fun onGameScoreUpdated(newScore: Int)
@@ -18,7 +18,7 @@ class GameMainScreenViewModel : BaseObservable<GameMainScreenViewModel.Listener>
     }
 
     private val gameBackend = GameBackend()
-    private val viewModelRequest = gameBackend as ViewModelRequestEventListener
+    private val viewModelRequest = gameBackend as ModelRequestEventListener
 
     private lateinit var _currentKatakanaSymbol: KatakanaSymbol
     val currentKatakanaSymbol get() = _currentKatakanaSymbol
@@ -26,7 +26,8 @@ class GameMainScreenViewModel : BaseObservable<GameMainScreenViewModel.Listener>
     private var _currentGameScore = 0
     val currentGameScore get() = _currentGameScore
 
-    var gameFinished = false
+    private var _gameFinished = false
+    val gameFinished get() = _gameFinished
 
     init {
         gameBackend.addListener(this)
@@ -58,39 +59,39 @@ class GameMainScreenViewModel : BaseObservable<GameMainScreenViewModel.Listener>
 
     override fun onSymbolUpdated(newSymbol: KatakanaSymbol) {
         _currentKatakanaSymbol = newSymbol
-        getListeners().forEach { it.onCurrentKatakanaSymbolUpdated(newSymbol) }
+        listeners.forEach { it.onCurrentKatakanaSymbolUpdated(newSymbol) }
     }
 
     override fun onGameScoreUpdated(newScore: Int) {
         _currentGameScore = newScore
-        getListeners().forEach { it.onGameScoreUpdated(newScore) }
+        listeners.forEach { it.onGameScoreUpdated(newScore) }
     }
 
     override fun onGameProgressUpdated(updatedProgress: Int) {
-        getListeners().forEach { it.onGameProgressUpdated(updatedProgress) }
+        listeners.forEach { it.onGameProgressUpdated(updatedProgress) }
     }
 
     override fun onGameCountdownTimeUpdated(updatedCountdownTime: Int) {
-        getListeners().forEach { it.onGameCountDownTimeUpdated(updatedCountdownTime) }
+        listeners.forEach { it.onGameCountDownTimeUpdated(updatedCountdownTime) }
     }
 
     override fun onRomanizationGroupUpdated(updatedRomanizationGroupList: List<String>) {
-        getListeners().forEach { it.onRomanizationGroupUpdated(updatedRomanizationGroupList) }
+        listeners.forEach { it.onRomanizationGroupUpdated(updatedRomanizationGroupList) }
     }
 
     override fun onCorrectAnswer() {
-        getListeners().forEach { it.onCorrectAnswer() }
+        listeners.forEach { it.onCorrectAnswer() }
     }
 
     override fun onWrongAnswer() {
-        getListeners().forEach { it.onWrongAnswer() }
+        listeners.forEach { it.onWrongAnswer() }
     }
 
     override fun onGameTimeOver() {
-        getListeners().forEach { it.onGameTimeOver() }
+        listeners.forEach { it.onGameTimeOver() }
     }
 
     override fun onGameFinished() {
-        gameFinished = true
+        _gameFinished = true
     }
 }

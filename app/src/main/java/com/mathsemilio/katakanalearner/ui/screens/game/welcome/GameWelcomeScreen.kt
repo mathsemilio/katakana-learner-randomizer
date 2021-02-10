@@ -9,9 +9,9 @@ import com.mathsemilio.katakanalearner.data.preferences.repository.PreferencesRe
 import com.mathsemilio.katakanalearner.others.SoundEffectsModule
 import com.mathsemilio.katakanalearner.ui.others.ScreensNavigator
 import com.mathsemilio.katakanalearner.ui.screens.commom.BaseFragment
-import com.mathsemilio.katakanalearner.ui.screens.commom.usecase.InterstitialAdUseCase
+import com.mathsemilio.katakanalearner.ui.others.InterstitialAdHelper
 
-class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, InterstitialAdUseCase.Listener {
+class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, InterstitialAdHelper.Listener {
 
     private lateinit var gameWelcomeScreenView: GameWelcomeScreenViewImpl
 
@@ -19,7 +19,7 @@ class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, Inters
     private lateinit var soundEffectsModule: SoundEffectsModule
     private lateinit var screensNavigator: ScreensNavigator
 
-    private lateinit var interstitialAdUseCase: InterstitialAdUseCase
+    private lateinit var interstitialAdHelper: InterstitialAdHelper
     private lateinit var adRequest: AdRequest
 
     override fun onCreateView(
@@ -38,7 +38,7 @@ class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, Inters
 
         gameWelcomeScreenView.setupUI(preferencesRepository.gameDefaultOption)
 
-        interstitialAdUseCase.addListener(this)
+        interstitialAdHelper.addListener(this)
     }
 
     private fun initialize() {
@@ -50,7 +50,7 @@ class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, Inters
 
         adRequest = compositionRoot.adRequest
 
-        interstitialAdUseCase = compositionRoot.interstitialAdUseCase
+        interstitialAdHelper = compositionRoot.interstitialAdHelper
     }
 
     override fun onPlayClickSoundEffect() {
@@ -63,14 +63,14 @@ class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, Inters
 
     override fun onStartButtonClicked(difficultyValue: Int) {
         soundEffectsModule.playButtonClickSoundEffect()
-        interstitialAdUseCase.showInterstitialAd()
+        interstitialAdHelper.showInterstitialAd()
     }
 
     override fun onAdDismissed() {
         screensNavigator.navigateToMainScreen(gameWelcomeScreenView.getDifficultyValue())
     }
 
-    override fun onAdFailedToShow() {
+    override fun onAdFailedToLoad() {
         screensNavigator.navigateToMainScreen(gameWelcomeScreenView.getDifficultyValue())
     }
 
@@ -85,7 +85,7 @@ class GameWelcomeScreen : BaseFragment(), GameWelcomeScreenView.Listener, Inters
     }
 
     override fun onDestroyView() {
-        interstitialAdUseCase.removeListener(this)
+        interstitialAdHelper.removeListener(this)
         super.onDestroyView()
     }
 }

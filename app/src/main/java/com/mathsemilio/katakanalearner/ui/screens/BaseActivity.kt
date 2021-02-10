@@ -1,7 +1,7 @@
 package com.mathsemilio.katakanalearner.ui.screens
 
 import androidx.appcompat.app.AppCompatActivity
-import com.mathsemilio.katakanalearner.di.ActivityCompositionRoot
+import com.mathsemilio.katakanalearner.commom.dependencyinjection.ActivityCompositionRoot
 import com.mathsemilio.katakanalearner.others.KatakanaRandomizerApplication
 
 abstract class BaseActivity : AppCompatActivity() {

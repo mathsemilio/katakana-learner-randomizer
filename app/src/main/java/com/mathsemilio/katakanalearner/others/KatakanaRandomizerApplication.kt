@@ -2,7 +2,7 @@ package com.mathsemilio.katakanalearner.others
 
 import android.app.Application
 import com.google.android.gms.ads.MobileAds
-import com.mathsemilio.katakanalearner.di.CompositionRoot
+import com.mathsemilio.katakanalearner.commom.dependencyinjection.CompositionRoot
 
 class KatakanaRandomizerApplication : Application() {
 

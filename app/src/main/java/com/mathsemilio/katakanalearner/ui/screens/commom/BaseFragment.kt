@@ -1,7 +1,7 @@
 package com.mathsemilio.katakanalearner.ui.screens.commom
 
 import androidx.fragment.app.Fragment
-import com.mathsemilio.katakanalearner.di.ControllerCompositionRoot
+import com.mathsemilio.katakanalearner.commom.dependencyinjection.ControllerCompositionRoot
 import com.mathsemilio.katakanalearner.ui.screens.MainActivity
 
 abstract class BaseFragment : Fragment() {

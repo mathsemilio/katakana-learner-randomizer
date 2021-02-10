@@ -20,9 +20,8 @@ class GameResultScreenViewImpl(inflater: LayoutInflater, container: ViewGroup?) 
     private lateinit var buttonHome: FloatingActionButton
     private lateinit var buttonPlayAgain: FloatingActionButton
     private lateinit var buttonShareScore: FloatingActionButton
-    private lateinit var gameResultScreenAdBanner: AdView
+    private lateinit var adViewGameResultScreen: AdView
 
-    private var finalScore = 0
     private var gameDifficultyValue = 0
 
     init {
@@ -32,18 +31,17 @@ class GameResultScreenViewImpl(inflater: LayoutInflater, container: ViewGroup?) 
     }
 
     override fun setupUI(difficultyValue: Int, score: Int, perfectScores: Int) {
-        finalScore = score
         gameDifficultyValue = difficultyValue
 
-        if (finalScore == 0) buttonShareScore.visibility = View.GONE
+        if (score == 0) buttonShareScore.visibility = View.GONE
 
-        setupYouGotSymbolsCorrectlyTextView()
+        setupYouGotSymbolsCorrectlyTextView(score)
         setupGameDifficultyTextView()
         setupPerfectScoresNumberTextView(perfectScores)
     }
 
     override fun loadBannerAd(adRequest: AdRequest) {
-        gameResultScreenAdBanner.loadAd(adRequest)
+        adViewGameResultScreen.loadAd(adRequest)
     }
 
     private fun initializeViews() {
@@ -53,14 +51,14 @@ class GameResultScreenViewImpl(inflater: LayoutInflater, container: ViewGroup?) 
         buttonHome = findViewById(R.id.fab_home)
         buttonPlayAgain = findViewById(R.id.fab_play_again)
         buttonShareScore = findViewById(R.id.fab_share)
-        gameResultScreenAdBanner = findViewById(R.id.game_result_screen_ad_banner)
+        adViewGameResultScreen = findViewById(R.id.adview_game_result_screen)
     }
 
-    private fun setupYouGotSymbolsCorrectlyTextView() {
-        textViewYouGotSymbolsCorrectly.text = when (finalScore) {
-            1 -> getContext().getString(R.string.you_got_one_symbol_correctly, finalScore)
+    private fun setupYouGotSymbolsCorrectlyTextView(score: Int) {
+        textViewYouGotSymbolsCorrectly.text = when (score) {
+            1 -> getContext().getString(R.string.you_got_one_symbol_correctly, score)
             PERFECT_SCORE -> getContext().getString(R.string.you_got_all_symbols_correctly)
-            else -> getContext().getString(R.string.you_got_symbol_correctly, finalScore)
+            else -> getContext().getString(R.string.you_got_symbol_correctly, score)
         }
     }
 
@@ -84,14 +82,14 @@ class GameResultScreenViewImpl(inflater: LayoutInflater, container: ViewGroup?) 
     }
 
     private fun onHomeButtonClicked() {
-        getListeners().forEach { it.onHomeButtonClicked() }
+        listeners.forEach { it.onHomeButtonClicked() }
     }
 
     private fun onPlayAgainButtonClicked(difficultyValue: Int) {
-        getListeners().forEach { it.onPlayAgainClicked(difficultyValue) }
+        listeners.forEach { it.onPlayAgainClicked(difficultyValue) }
     }
 
     private fun onShareScoreButtonClicked() {
-        getListeners().forEach { it.onShareScoreButtonClicked() }
+        listeners.forEach { it.onShareScoreButtonClicked() }
     }
 }

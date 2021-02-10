@@ -1,6 +1,6 @@
 package com.mathsemilio.katakanalearner.others
 
-import com.mathsemilio.katakanalearner.domain.katakana.KatakanaSymbol
+import com.mathsemilio.katakanalearner.domain.entity.katakana.KatakanaSymbol
 
 val katakanaSymbolsList: List<KatakanaSymbol> = listOf(
     KatakanaSymbol(symbol = "ア", romanization = "A"),

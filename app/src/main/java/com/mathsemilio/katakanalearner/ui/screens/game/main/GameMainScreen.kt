@@ -8,21 +8,22 @@ import androidx.activity.OnBackPressedCallback
 import com.google.android.gms.ads.AdRequest
 import com.mathsemilio.katakanalearner.commom.ARG_DIFFICULTY_VALUE
 import com.mathsemilio.katakanalearner.commom.NULL_DIFFICULTY_VALUE_EXCEPTION
-import com.mathsemilio.katakanalearner.commom.PERFECT_SCORE
-import com.mathsemilio.katakanalearner.data.preferences.repository.PreferencesRepository
-import com.mathsemilio.katakanalearner.domain.katakana.KatakanaSymbol
+import com.mathsemilio.katakanalearner.domain.entity.katakana.KatakanaSymbol
+import com.mathsemilio.katakanalearner.domain.usecase.GetSymbolUseCase
+import com.mathsemilio.katakanalearner.game.model.GameModel
 import com.mathsemilio.katakanalearner.others.SoundEffectsModule
 import com.mathsemilio.katakanalearner.ui.others.ScreensNavigator
 import com.mathsemilio.katakanalearner.ui.screens.commom.BaseFragment
-import com.mathsemilio.katakanalearner.ui.screens.commom.usecase.InterstitialAdUseCase
-import com.mathsemilio.katakanalearner.ui.screens.game.main.usecase.AlertUserUseCase
-import com.mathsemilio.katakanalearner.ui.screens.game.main.viewmodel.GameMainScreenViewModel
+import com.mathsemilio.katakanalearner.ui.others.InterstitialAdHelper
+import com.mathsemilio.katakanalearner.ui.screens.game.main.commom.AlertUserHelper
+import com.mathsemilio.katakanalearner.ui.screens.game.main.commom.ScreenState
 
 class GameMainScreen : BaseFragment(),
     GameMainScreenView.Listener,
-    GameMainScreenViewModel.Listener,
-    AlertUserUseCase.Listener,
-    InterstitialAdUseCase.Listener {
+    GameModel.Listener,
+    AlertUserHelper.Listener,
+    GetSymbolUseCase.Listener,
+    InterstitialAdHelper.Listener {
 
     companion object {
         fun newInstance(difficultyValue: Int): GameMainScreen {
@@ -34,15 +35,15 @@ class GameMainScreen : BaseFragment(),
     }
 
     private lateinit var gameMainScreenView: GameMainScreenViewImpl
-    private lateinit var viewModel: GameMainScreenViewModel
+    private lateinit var model: GameModel
 
     private lateinit var onBackPressedCallback: OnBackPressedCallback
-    private lateinit var preferencesRepository: PreferencesRepository
     private lateinit var soundEffectsModule: SoundEffectsModule
     private lateinit var screensNavigator: ScreensNavigator
-    private lateinit var alertUserUseCase: AlertUserUseCase
+    private lateinit var getSymbolUseCase: GetSymbolUseCase
+    private lateinit var alertUserHelper: AlertUserHelper
 
-    private lateinit var interstitialAdUseCase: InterstitialAdUseCase
+    private lateinit var interstitialAdHelper: InterstitialAdHelper
     private lateinit var adRequest: AdRequest
 
     private var difficultyValue = 0
@@ -53,21 +54,21 @@ class GameMainScreen : BaseFragment(),
 
         difficultyValue = getDifficultyValue()
 
-        viewModel = compositionRoot.gameMainScreenViewModel
+        model = compositionRoot.gameMainScreenViewModel
 
         onBackPressedCallback = compositionRoot.getOnBackPressedCallback { onExitButtonClicked() }
-
-        preferencesRepository = compositionRoot.preferencesRepository
 
         soundEffectsModule = compositionRoot.soundEffectsModule
 
         screensNavigator = compositionRoot.screensNavigator
 
-        alertUserUseCase = compositionRoot.alertUserUseCase
+        getSymbolUseCase = compositionRoot.getSymbolUseCase
+
+        alertUserHelper = compositionRoot.alertUserHelper
 
         adRequest = compositionRoot.adRequest
 
-        interstitialAdUseCase = compositionRoot.interstitialAdUseCase
+        interstitialAdHelper = compositionRoot.interstitialAdHelper
     }
 
     override fun onCreateView(
@@ -84,9 +85,8 @@ class GameMainScreen : BaseFragment(),
 
         gameMainScreenView.setupUI(difficultyValue)
 
-        viewModel.addListener(this)
-
-        viewModel.startGame(difficultyValue)
+        model.addListener(this)
+        model.startGame(difficultyValue)
 
         setupOnBackPressedDispatcher()
     }
@@ -103,31 +103,18 @@ class GameMainScreen : BaseFragment(),
         )
     }
 
-    private fun checkIfGameIsFinished() {
-        viewModel.run {
-            if (gameFinished) {
-                if (currentGameScore == PERFECT_SCORE)
-                    preferencesRepository.incrementPerfectScoresValue()
-
-                interstitialAdUseCase.showInterstitialAd()
-            } else {
-                getNextSymbol()
-            }
-        }
-    }
-
     override fun onExitButtonClicked() {
-        alertUserUseCase.alertUserOnExitGame(
+        alertUserHelper.alertUserOnExitGame(
             { screensNavigator.navigateToWelcomeScreen() },
-            { viewModel.resumeGameTimer() })
+            { model.resumeGameTimer() })
     }
 
     override fun onPauseButtonClicked() {
-        alertUserUseCase.alertUserOnGamePaused { viewModel.resumeGameTimer() }
+        alertUserHelper.alertUserOnGamePaused { model.resumeGameTimer() }
     }
 
     override fun onCheckAnswerClicked(selectedRomanization: String) {
-        viewModel.checkUserAnswer(selectedRomanization)
+        model.checkUserAnswer(selectedRomanization)
     }
 
     override fun onGameScoreUpdated(newScore: Int) {
@@ -151,28 +138,28 @@ class GameMainScreen : BaseFragment(),
     }
 
     override fun onCorrectAnswer() {
-        alertUserUseCase.alertUserOnCorrectAnswer {
-            checkIfGameIsFinished()
+        alertUserHelper.alertUserOnCorrectAnswer {
+            getSymbolUseCase.getNextSymbol(model.gameFinished, model.currentGameScore)
             gameMainScreenView.clearRomanizationOptions()
         }
     }
 
     override fun onWrongAnswer() {
-        alertUserUseCase.alertUserOnWrongAnswer(viewModel.currentKatakanaSymbol.romanization) {
-            checkIfGameIsFinished()
+        alertUserHelper.alertUserOnWrongAnswer(model.currentKatakanaSymbol.romanization) {
+            getSymbolUseCase.getNextSymbol(model.gameFinished, model.currentGameScore)
             gameMainScreenView.clearRomanizationOptions()
         }
     }
 
     override fun onGameTimeOver() {
-        alertUserUseCase.alertUserOnTimeOver(viewModel.currentKatakanaSymbol.romanization) {
-            checkIfGameIsFinished()
+        alertUserHelper.alertUserOnTimeOver(model.currentKatakanaSymbol.romanization) {
+            getSymbolUseCase.getNextSymbol(model.gameFinished, model.currentGameScore)
             gameMainScreenView.clearRomanizationOptions()
         }
     }
 
     override fun onPauseGameTimer() {
-        viewModel.pauseGameTimer()
+        model.pauseGameTimer()
     }
 
     override fun onScreenStateChanged(newScreenState: ScreenState) {
@@ -195,16 +182,24 @@ class GameMainScreen : BaseFragment(),
         soundEffectsModule.playErrorSoundEffect()
     }
 
-    override fun onAdDismissed() {
-        screensNavigator.navigateToResultScreen(difficultyValue, viewModel.currentGameScore)
+    override fun onGetNextSymbol() {
+        model.getNextSymbol()
     }
 
-    override fun onAdFailedToShow() {
-        screensNavigator.navigateToResultScreen(difficultyValue, viewModel.currentGameScore)
+    override fun onShowInterstitialAd() {
+        interstitialAdHelper.showInterstitialAd()
+    }
+
+    override fun onAdDismissed() {
+        screensNavigator.navigateToResultScreen(difficultyValue, model.currentGameScore)
+    }
+
+    override fun onAdFailedToLoad() {
+        screensNavigator.navigateToResultScreen(difficultyValue, model.currentGameScore)
     }
 
     override fun onPause() {
-        viewModel.pauseGameTimer()
+        model.pauseGameTimer()
 
         if (currentScreenState == ScreenState.TIMER_RUNNING)
             currentScreenState = ScreenState.TIMER_PAUSED
@@ -214,27 +209,29 @@ class GameMainScreen : BaseFragment(),
 
     override fun onStop() {
         gameMainScreenView.removeListener(this)
-        alertUserUseCase.removeListener(this)
-        interstitialAdUseCase.removeListener(this)
+        getSymbolUseCase.removeListener(this)
+        alertUserHelper.removeListener(this)
+        interstitialAdHelper.removeListener(this)
         super.onStop()
     }
 
     override fun onDestroyView() {
-        viewModel.onClearInstance()
-        viewModel.removeListener(this)
+        model.onClearInstance()
+        model.removeListener(this)
         super.onDestroyView()
     }
 
     override fun onStart() {
         gameMainScreenView.addListener(this)
-        alertUserUseCase.addListener(this)
-        interstitialAdUseCase.addListener(this)
+        getSymbolUseCase.addListener(this)
+        alertUserHelper.addListener(this)
+        interstitialAdHelper.addListener(this)
         super.onStart()
     }
 
     override fun onResume() {
         if (currentScreenState == ScreenState.TIMER_PAUSED)
-            viewModel.resumeGameTimer()
+            model.resumeGameTimer()
 
         super.onResume()
     }

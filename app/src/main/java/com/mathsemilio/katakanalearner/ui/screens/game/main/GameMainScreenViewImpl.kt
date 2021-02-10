@@ -123,18 +123,18 @@ class GameMainScreenViewImpl(inflater: LayoutInflater, container: ViewGroup?) :
     }
 
     private fun onPlayClickSoundEffect() {
-        getListeners().forEach { it.playClickSoundEffect() }
+        listeners.forEach { it.playClickSoundEffect() }
     }
 
     private fun onExitGameButtonClicked() {
-        getListeners().forEach { it.onExitButtonClicked() }
+        listeners.forEach { it.onExitButtonClicked() }
     }
 
     private fun onPauseGameButtonClicked() {
-        getListeners().forEach { it.onPauseButtonClicked() }
+        listeners.forEach { it.onPauseButtonClicked() }
     }
 
     private fun onCheckAnswerButtonClicked(selectedRomanization: String) {
-        getListeners().forEach { it.onCheckAnswerClicked(selectedRomanization) }
+        listeners.forEach { it.onCheckAnswerClicked(selectedRomanization) }
     }
 }
