@@ -6,8 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <supports-screens android:largestWidthLimitDp="2048" />
-
     <application
         android:name=".others.KatakanaRandomizerApplication"
         android:allowBackup="false"
@@ -24,10 +22,10 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
         <activity
             android:name=".ui.screens.MainActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
